@@ -1,0 +1,32 @@
+[
+  {
+    "id": 6,
+    "name": "Cloud",
+    "section": "Certificate"
+  },
+  {
+    "id": 5,
+    "name": "Frontend",
+    "section": "Certificate"
+  },
+  {
+    "id": 4,
+    "name": "Backend",
+    "section": "Certificate"
+  },
+  {
+    "id": 3,
+    "name": "Personal",
+    "section": "Portfolio"
+  },
+  {
+    "id": 2,
+    "name": "Laboratorio",
+    "section": "Portfolio"
+  },
+  {
+    "id": 1,
+    "name": "Profesional",
+    "section": "Portfolio"
+  }
+]

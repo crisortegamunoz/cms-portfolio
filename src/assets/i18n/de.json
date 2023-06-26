@@ -14,9 +14,7 @@
     "DASHBOARD": {
       "TEXT": "Zuhause",
       "LIST": {
-        "DASHBOARD1": "Dashboard 1",
-        "DASHBOARD2": "Dashboard 2",
-        "DASHBOARD3": "Dashboard 3"
+        "DASHBOARD": "Dashboard"
       }
     },
     "ADVANCE-TABLE": {

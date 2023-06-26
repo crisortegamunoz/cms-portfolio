@@ -111,7 +111,7 @@ export class HeaderComponent
     this.config = this.configService.configData;
     this.userImg = this.authService.currentUserValue.img;
 
-    this.homePage = 'dashboard/dashboard1';
+    this.homePage = 'dashboard';
 
     this.langStoreValue = localStorage.getItem('lang') as string;
     const val = this.listLang.filter((x) => x.lang === this.langStoreValue);

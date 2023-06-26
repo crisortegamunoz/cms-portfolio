@@ -14,13 +14,14 @@
     "DASHBOARD": {
       "TEXT": "Casa",
       "LIST": {
-        "DASHBOARD1": "Tablero 1",
-        "DASHBOARD2": "Tablero 2",
-        "DASHBOARD3": "Tablero 3"
+        "DASHBOARD": "Tablero"
       }
     },
     "ADVANCE-TABLE": {
       "TEXT": "Tabla de avance"
+    },
+    "CATEGORY": {
+      "TEXT": "Categorías"
     },
     "APPS": {
       "TEXT": "Aplicaciones"
