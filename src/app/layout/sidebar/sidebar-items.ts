@@ -78,20 +78,7 @@ export const ROUTES: RouteInfo[] = [
     badgeClass: '',
     submenu: [],
   },
-  {
-    path: 'calendar',
-    title: 'MENUITEMS.CALENDAR.TEXT',
-    iconType: 'feather',
-    icon: 'calendar',
-    class: '',
-    groupTitle: false,
-    badge: 'New',
-    badgeClass: 'badge bg-blue sidebar-badge float-end',
-    submenu: [],
-  },
-
   // Common Modules
-
   {
     path: '',
     title: 'MENUITEMS.APPS.TEXT',

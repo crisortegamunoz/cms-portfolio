@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Comunicación",
+    "available": false,
+    "percentage": 0,
+    "cssClass": null,
+    "cssStyle": null,
+    "technologyId": null,
+    "technologyName": null,
+    "categoryId": 7,
+    "categoryName": "KNOWLEDGE"
+  },
+  {
+    "id": 2,
+    "name": "Liderazgo",
+    "available": false,
+    "percentage": 0,
+    "cssClass": null,
+    "cssStyle": null,
+    "technologyId": null,
+    "technologyName": null,
+    "categoryId": 7,
+    "categoryName": "KNOWLEDGE"
+  }
+]

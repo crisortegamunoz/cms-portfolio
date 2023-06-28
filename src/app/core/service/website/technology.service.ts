@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CategoryDTO } from '../../models/website/category.model';
+import { TechnologyDTO } from '../../models/website/technology.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService extends UnsubscribeOnDestroyAdapter {
+export class TechnologyService extends UnsubscribeOnDestroyAdapter {
 
-  private readonly API_URL = 'assets/data/category-data.json';
+  private readonly API_URL = 'assets/data/technology-data.json';
   isTblLoading = true;
-  dataChange: BehaviorSubject<CategoryDTO[]> = new BehaviorSubject<CategoryDTO[]>([]);
+  dataChange: BehaviorSubject<TechnologyDTO[]> = new BehaviorSubject<TechnologyDTO[]>([]);
   // Temporarily stores data from dialogs
-  dialogData!: CategoryDTO;
+  dialogData!: TechnologyDTO;
 
   constructor(private httpClient: HttpClient) {
     super();
   }
 
-  get data(): CategoryDTO[] {
+  get data(): TechnologyDTO[] {
     return this.dataChange.value;
   }
 
@@ -30,7 +30,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
 
   getAllAdvanceTables(): void {
     this.subs.sink = this.httpClient
-      .get<CategoryDTO[]>(this.API_URL)
+      .get<TechnologyDTO[]>(this.API_URL)
       .subscribe({
         next: (data) => {
           this.isTblLoading = false;
@@ -42,7 +42,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
         },
       });
   }
-  addAdvanceTable(advanceTable: CategoryDTO): void {
+  addAdvanceTable(advanceTable: TechnologyDTO): void {
     this.dialogData = advanceTable;
 
     // this.httpClient.post(this.API_URL, advanceTable)
@@ -55,7 +55,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
     //     },
     //   });
   }
-  updateAdvanceTable(advanceTable: CategoryDTO): void {
+  updateAdvanceTable(advanceTable: TechnologyDTO): void {
     this.dialogData = advanceTable;
 
     // this.httpClient.put(this.API_URL + advanceTable.id, advanceTable)
@@ -81,4 +81,6 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
     //       },
     //     });
   }
+
 }
+

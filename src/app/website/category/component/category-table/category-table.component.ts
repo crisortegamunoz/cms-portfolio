@@ -40,7 +40,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
   exampleDatabase?: CategoryService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<CategoryDTO>(true, []);
-  id?: string;
+  id?: number;
   category?: CategoryDTO;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
