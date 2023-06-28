@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Category } from '../../models/website/category.model';
+import { CategoryDTO } from '../../models/website/category.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 
@@ -11,17 +11,17 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
 
   private readonly API_URL = 'assets/data/category-data.json';
   isTblLoading = true;
-  dataChange: BehaviorSubject<Category[]> = new BehaviorSubject<
-  Category[]
+  dataChange: BehaviorSubject<CategoryDTO[]> = new BehaviorSubject<
+  CategoryDTO[]
   >([]);
   // Temporarily stores data from dialogs
-  dialogData!: Category;
+  dialogData!: CategoryDTO;
 
   constructor(private httpClient: HttpClient) {
     super();
   }
 
-  get data(): Category[] {
+  get data(): CategoryDTO[] {
     return this.dataChange.value;
   }
 
@@ -32,7 +32,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
 
   getAllAdvanceTables(): void {
     this.subs.sink = this.httpClient
-      .get<Category[]>(this.API_URL)
+      .get<CategoryDTO[]>(this.API_URL)
       .subscribe({
         next: (data) => {
           this.isTblLoading = false;
@@ -44,7 +44,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
         },
       });
   }
-  addAdvanceTable(advanceTable: Category): void {
+  addAdvanceTable(advanceTable: CategoryDTO): void {
     this.dialogData = advanceTable;
 
     // this.httpClient.post(this.API_URL, advanceTable)
@@ -57,7 +57,7 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
     //     },
     //   });
   }
-  updateAdvanceTable(advanceTable: Category): void {
+  updateAdvanceTable(advanceTable: CategoryDTO): void {
     this.dialogData = advanceTable;
 
     // this.httpClient.put(this.API_URL + advanceTable.id, advanceTable)

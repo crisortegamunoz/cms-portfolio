@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "cms-portfolio-firebase": {
+      "hosting": {
+        "cms-portfolio": [
+          "cms-portfolio-firebase"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "cms-portfolio-firebase"
+  }
+}

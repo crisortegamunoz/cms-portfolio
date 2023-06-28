@@ -1,5 +1,6 @@
-export interface Category {
+export interface CategoryDTO {
   id: string;
   name: string;
   section: string;
 }
+

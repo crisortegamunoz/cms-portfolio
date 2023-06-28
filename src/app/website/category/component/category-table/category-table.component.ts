@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 
 import { CategoryService } from '../../../../core/service/website/category.service';
-import { Category } from '../../../../core/models/website/category.model';
+import { CategoryDTO } from '../../../../core/models/website/category.model';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { DeleteDialogComponent } from '@shared/components/delete-dialog/delete-dialog.component';
 //import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
@@ -39,9 +39,9 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
   ];
   exampleDatabase?: CategoryService;
   dataSource!: ExampleDataSource;
-  selection = new SelectionModel<Category>(true, []);
+  selection = new SelectionModel<CategoryDTO>(true, []);
   id?: string;
-  category?: Category;
+  category?: CategoryDTO;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -96,7 +96,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
     });
   }
 
-  editCall(row: Category) {
+  editCall(row: CategoryDTO) {
     this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -134,7 +134,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
     });
   }
 
-  deleteItem(row: Category) {
+  deleteItem(row: CategoryDTO) {
     this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -194,7 +194,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
       this.exampleDatabase?.dataChange.value.splice(index, 1);
       this.refreshTable();
-      this.selection = new SelectionModel<Category>(true, []);
+      this.selection = new SelectionModel<CategoryDTO>(true, []);
     });
     this.showNotification(
       'snackbar-danger',
@@ -235,7 +235,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
 
 
   // context menu
-  onContextMenu(event: MouseEvent, item: Category) {
+  onContextMenu(event: MouseEvent, item: CategoryDTO) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -246,7 +246,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
     }
   }
 }
-export class ExampleDataSource extends DataSource<Category> {
+export class ExampleDataSource extends DataSource<CategoryDTO> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -254,8 +254,8 @@ export class ExampleDataSource extends DataSource<Category> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: Category[] = [];
-  renderedData: Category[] = [];
+  filteredData: CategoryDTO[] = [];
+  renderedData: CategoryDTO[] = [];
   constructor(
     public exampleDatabase: CategoryService,
     public paginator: MatPaginator,
@@ -267,7 +267,7 @@ export class ExampleDataSource extends DataSource<Category> {
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Category[]> {
+  connect(): Observable<CategoryDTO[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.exampleDatabase.dataChange,
@@ -281,7 +281,7 @@ export class ExampleDataSource extends DataSource<Category> {
         // Filter data
         this.filteredData = this.exampleDatabase.data
           .slice()
-          .filter((category: Category) => {
+          .filter((category: CategoryDTO) => {
             const searchStr = (
               category.id +
               category.name +
@@ -305,7 +305,7 @@ export class ExampleDataSource extends DataSource<Category> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: Category[]): Category[] {
+  sortData(data: CategoryDTO[]): CategoryDTO[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
