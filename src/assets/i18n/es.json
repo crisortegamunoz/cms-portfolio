@@ -20,14 +20,17 @@
     "ADVANCE-TABLE": {
       "TEXT": "Tabla de avance"
     },
+    "SKILL": {
+      "TEXT": "Habilidades"
+    },
+    "TECHNOLOGY": {
+      "TEXT": "Tecnologías"
+    },
     "CATEGORY": {
       "TEXT": "Categorías"
     },
     "APPS": {
       "TEXT": "Aplicaciones"
-    },
-    "CALENDAR": {
-      "TEXT": "Calendario"
     },
     "TASK": {
       "TEXT": "Tarea"

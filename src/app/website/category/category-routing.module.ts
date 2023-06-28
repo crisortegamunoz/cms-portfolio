@@ -5,7 +5,7 @@ import { CategoryTableComponent } from './component/category-table/category-tabl
 const routes: Routes = [
   {
     path: '',
-    component: CategoryTableComponent,
+    component: CategoryTableComponent
   }
 ];
 

@@ -28,16 +28,25 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'skill',
+        loadChildren: () =>
+          import('./website/skill/skill.module').then(
+            (m) => m.SkillModule
+          ),
+      },
+      {
+        path: 'technology',
+        loadChildren: () =>
+          import('./website/technology/technology.module').then(
+            (m) => m.TechnologyModule
+          ),
+      },
+      {
         path: 'category',
         loadChildren: () =>
           import('./website/category/category.module').then(
             (m) => m.CategoryModule
           ),
-      },
-      {
-        path: 'calendar',
-        loadChildren: () =>
-          import('./calendar/calendar.module').then((m) => m.CalendarsModule),
       },
       {
         path: 'task',
