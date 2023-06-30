@@ -17,9 +17,6 @@
         "DASHBOARD": "Tablero"
       }
     },
-    "ADVANCE-TABLE": {
-      "TEXT": "Tabla de avance"
-    },
     "SKILL": {
       "TEXT": "Habilidades"
     },
@@ -28,6 +25,9 @@
     },
     "CATEGORY": {
       "TEXT": "Categorías"
+    },
+    "CERTIFICATE": {
+      "TEXT": "Certificados"
     },
     "APPS": {
       "TEXT": "Aplicaciones"

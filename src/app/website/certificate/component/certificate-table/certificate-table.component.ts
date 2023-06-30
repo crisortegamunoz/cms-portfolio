@@ -10,18 +10,18 @@ import { MatSnackBar} from '@angular/material/snack-bar';
 
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
-import { SkillDTO } from '@core/models/website/skill.model';
-import { SkillFormComponent } from '../skill-form/skill-form.component';
-import { SkillService } from '@core/service/website/skill.service';
+import { CertificateDTO } from '@core/models/website/certificate.model';
+import { CertificateService } from '@core/service/website/certificate.service';
 import { SwalConfig } from '@core/swal/config';
 import { MatTableDataSource } from '@angular/material/table';
+import { CertificateFormComponent } from '../certificate-form/certificate-form.component';
 
 @Component({
-  selector: 'app-skill-table',
-  templateUrl: './skill-table.component.html',
-  styleUrls: ['./skill-table.component.scss']
+  selector: 'app-certificate-table',
+  templateUrl: './certificate-table.component.html',
+  styleUrls: ['./certificate-table.component.scss']
 })
-export class SkillTableComponent  extends UnsubscribeOnDestroyAdapter implements OnInit {
+export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -29,19 +29,19 @@ export class SkillTableComponent  extends UnsubscribeOnDestroyAdapter implements
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
 
-  skills: SkillDTO[];
-  dataSource!: MatTableDataSource<SkillDTO>;
-  displayedColumns: string[] = ['id', 'name', 'show', 'technologyName', 'categoryName', 'actions'];
+  certificates: CertificateDTO[];
+  dataSource!: MatTableDataSource<CertificateDTO>;
+  displayedColumns: string[] = ['id', 'name', 'image', 'entityName', 'completed', 'actions'];
   contextMenuPosition = { x: '0px', y: '0px' };
-  selection = new SelectionModel<SkillDTO>(true, []);
-  exampleDatabase?: SkillService;
+  selection = new SelectionModel<CertificateDTO>(true, []);
+  exampleDatabase?: CertificateService;
 
   constructor(public httpClient: HttpClient,
               public dialog: MatDialog,
-              public skillService: SkillService,
+              public certificateService: CertificateService,
               private snackBar: MatSnackBar) {
     super();
-    this.skills = [];
+    this.certificates = [];
   }
 
 
@@ -54,49 +54,49 @@ export class SkillTableComponent  extends UnsubscribeOnDestroyAdapter implements
   }
 
   getSkills() {
-    this.skillService.getAll().subscribe((skills) => {
-      this.skills = skills;
-      this.dataSource = new MatTableDataSource<SkillDTO>(this.skills);
+    this.certificateService.getAll().subscribe((certificates) => {
+      this.certificates = certificates;
+      this.dataSource = new MatTableDataSource<CertificateDTO>(this.certificates);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
   }
 
   addNew() {
-    const dialogRef = this.dialog.open(SkillFormComponent, {
+    const dialogRef = this.dialog.open(CertificateFormComponent, {
       data: {
-        category: {} as SkillDTO,
+        object: {} as CertificateDTO,
         action: 'add',
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        SwalConfig.successMessage('La habilidad fue creada exitosamente!');
+        SwalConfig.successMessage('El certificado fue creado exitosamente!');
         this.getSkills();
       }
     });
   }
 
-  editCall(skill: SkillDTO) {
-    const dialogRef = this.dialog.open(SkillFormComponent, {
+  editCall(certificate: CertificateDTO) {
+    const dialogRef = this.dialog.open(CertificateFormComponent, {
       data: {
-        object: skill,
+        object: certificate,
         action: 'edit',
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        SwalConfig.successMessage(`La habilidad N° ${skill.id} fue actualizada`);
+        SwalConfig.successMessage(`El certificado N° ${certificate.id} fue actualizado`);
         this.getSkills();
       }
     });
   }
 
-  deleteItem(skill: SkillDTO) {
+  deleteItem(skill: CertificateDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
-        this.skillService.delete(skill.id).subscribe(() => {
-            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'La habilidad fue eliminada');
+        this.certificateService.delete(skill.id).subscribe(() => {
+            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
             this.getSkills();
         });
 
@@ -143,7 +143,7 @@ export class SkillTableComponent  extends UnsubscribeOnDestroyAdapter implements
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: SkillDTO) {
+  onContextMenu(event: MouseEvent, item: CertificateDTO) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
