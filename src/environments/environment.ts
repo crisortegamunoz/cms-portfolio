@@ -9,4 +9,5 @@ export const environment = {
   },
   production: true,
   apiUrl: 'http://localhost:4200',
+  PORTFOLIO_API: 'http://localhost:8080/api/'
 };

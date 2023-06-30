@@ -1,5 +1,5 @@
 export interface TechnologyDTO {
-  id: number;
+  idTechnology: number;
   name: string;
   version: string;
 }

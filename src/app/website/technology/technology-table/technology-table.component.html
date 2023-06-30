@@ -23,24 +23,23 @@
             <div class="right">
               <ul class="tbl-export-btn">
                 <li class="tbl-header-btn">
-                  <div class="m-l-10" matTooltip="ADD">
+                  <div class="m-l-10" matTooltip="Agregar">
                     <button mat-mini-fab color="primary" (click)="addNew()">
                       <mat-icon class="col-white">add</mat-icon>
                     </button>
                   </div>
                 </li>
                 <li class="tbl-header-btn">
-                  <div class="m-l-10" matTooltip="REFRESH">
-                    <button mat-mini-fab color="primary" (click)="refresh()">
+                  <div class="m-l-10" matTooltip="Refrescar">
+                    <button mat-mini-fab color="primary" (click)="getTechnologies()">
                       <mat-icon class="col-white">refresh</mat-icon>
                     </button>
                   </div>
                 </li>
                 <li class="tbl-header-btn">
-                  <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
+                  <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="Borrar">
                     <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                      <mat-icon class="col-white">delete
-                      </mat-icon>
+                      <mat-icon class="col-white">delete</mat-icon>
                     </button>
                   </div>
                 </li>
@@ -66,19 +65,19 @@
                 </ng-container>
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-7'">ID</mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.id}}</mat-cell>
+                  <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">ID</mat-header-cell>
+                  <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.idTechnology}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="name">
-                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'"> Nombre
+                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-18'"> Nombre
                   </mat-header-cell>
-                  <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
+                  <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-18"><span
                       class="mobile-label">Nombre:</span>
                       <span class="mobile-label">Nombre:</span>{{row.name}}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="version">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Versión
+                  <mat-header-cell *matHeaderCellDef>Versión
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                     <span class="mobile-label">Versión:</span>{{row.version}}</mat-cell>
@@ -87,7 +86,7 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                    <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(row)"
+                    <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editItem(row)"
                       class="tbl-action-btn">
                       <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
@@ -98,7 +97,7 @@
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
+                <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editItem(row)"
                   [style.cursor]="'pointer'" matRipple>
                 </mat-row>
               </table>
@@ -118,7 +117,7 @@
                   <mat-icon>add_box</mat-icon>
                   <span>Add Record</span>
                 </button>
-                <button mat-menu-item (click)="editCall(item)">
+                <button mat-menu-item (click)="editItem(item)">
                   <mat-icon>create</mat-icon>
                   <span>Edit Record</span>
                 </button>
@@ -155,11 +154,11 @@
               </button>
             </mat-menu>
             <!-- context menu end -->
-            <div *ngIf="!exampleDatabase?.isTblLoading" class="no-results"
-              [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+            <div *ngIf="!dataSource || dataSource.data.length <= 0" class="no-results"
+              [style.display]="dataSource && dataSource.data.length > 0 ? '' : 'none'">
               No results
             </div>
-            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+            <mat-paginator #paginator [length]="dataSource && dataSource.data.length" [pageIndex]="0" [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">
             </mat-paginator>
           </div>

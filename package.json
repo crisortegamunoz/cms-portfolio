@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:proxy": "ng serve --o --proxy-config ./proxy.config.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint"
@@ -59,7 +60,7 @@
     "ngx-scrollbar": "^11.0.0",
     "rxjs": "~7.8.1",
     "subsink": "^1.0.2",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "^11.7.12",
     "tslib": "^2.5.0",
     "xlsx": "^0.18.5",
     "zone.js": "~0.13.0"

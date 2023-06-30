@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TechnologyDTO } from '../../models/website/technology.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { environment } from '../../../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 export class TechnologyService extends UnsubscribeOnDestroyAdapter {
 
   private readonly API_URL = 'assets/data/technology-data.json';
+  private SERVICE = `/api/technologies`
   isTblLoading = true;
   dataChange: BehaviorSubject<TechnologyDTO[]> = new BehaviorSubject<TechnologyDTO[]>([]);
   // Temporarily stores data from dialogs
@@ -42,44 +45,21 @@ export class TechnologyService extends UnsubscribeOnDestroyAdapter {
         },
       });
   }
-  addAdvanceTable(advanceTable: TechnologyDTO): void {
-    this.dialogData = advanceTable;
 
-    // this.httpClient.post(this.API_URL, advanceTable)
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.dialogData = advanceTable;
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //        // error code here
-    //     },
-    //   });
+  getAll(): Observable<TechnologyDTO[]> {
+    return this.httpClient.get<TechnologyDTO[]>(`${this.SERVICE}`);
   }
-  updateAdvanceTable(advanceTable: TechnologyDTO): void {
-    this.dialogData = advanceTable;
 
-    // this.httpClient.put(this.API_URL + advanceTable.id, advanceTable)
-    //     .subscribe({
-    //       next: (data) => {
-    //         this.dialogData = advanceTable;
-    //       },
-    //       error: (error: HttpErrorResponse) => {
-    //          // error code here
-    //       },
-    //     });
+  save(technology: TechnologyDTO): Observable<TechnologyDTO> {
+    if (technology.idTechnology) {
+      return this.httpClient.put<TechnologyDTO>(`${this.SERVICE}`, technology);
+    } else {
+      return this.httpClient.post<TechnologyDTO>(`${this.SERVICE}`, technology);
+    }
   }
-  deleteAdvanceTable(id: number): void {
-    console.log(id);
 
-    // this.httpClient.delete(this.API_URL + id)
-    //     .subscribe({
-    //       next: (data) => {
-    //         console.log(id);
-    //       },
-    //       error: (error: HttpErrorResponse) => {
-    //          // error code here
-    //       },
-    //     });
+  delete(id: number): Observable<boolean> {
+    return this.httpClient.delete<boolean>(`${this.SERVICE}/${id}`);
   }
 
 }

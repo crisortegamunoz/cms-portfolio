@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { DialogData } from '@core/models/website/dialog.model';
@@ -22,21 +21,21 @@ export class TechnologyFormComponent {
               @Inject(MAT_DIALOG_DATA) public data: DialogData<TechnologyDTO>,
               public technologyService: TechnologyService,
               private fb: UntypedFormBuilder) {
-    // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
       this.technology = { ... data.object };
-      this.dialogTitle = `${this.technology.name} ${this.technology.version}`;
+      this.dialogTitle = `Tecnología N°
+        ${this.technology.idTechnology} - ${this.technology.name} ${this.technology.version ? this.technology.version : '' }`;
     } else {
-      this.dialogTitle = 'Crear categoría';
+      this.dialogTitle = 'Crear tecnología';
       this.technology = {} as TechnologyDTO;
     }
     this.technologyForm = this.createContactForm();
+
   }
-  formControl = new UntypedFormControl('', [
-    Validators.required,
-    // Validators.email,
-  ]);
+
+  formControl = new UntypedFormControl('', [Validators.required]);
+
   getErrorMessage() {
     return this.formControl.hasError('required')
       ? 'Required field'
@@ -44,11 +43,12 @@ export class TechnologyFormComponent {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      id: [this.technology.id],
-      name: [this.technology.name, [Validators.required, Validators.minLength(5), Validators.maxLength(40)]],
-      version: [this.technology.version, [Validators.minLength(5), Validators.maxLength(40)]]
+      idTechnology: [this.technology.idTechnology],
+      name: [this.technology.name, [Validators.required, Validators.maxLength(40)]],
+      version: [this.technology.version, [Validators.maxLength(40)]]
     });
   }
+
   submit() {
     // emppty stuff
   }
@@ -56,9 +56,10 @@ export class TechnologyFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.technologyService.addAdvanceTable(
-      this.technologyForm.getRawValue()
-    );
+    this.technologyForm.getRawValue();
+    this.technologyService.save(this.technologyForm.getRawValue()).subscribe((data) => {
+        console.log(data);
+    });
   }
 
 }
