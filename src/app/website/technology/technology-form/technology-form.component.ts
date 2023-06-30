@@ -25,7 +25,7 @@ export class TechnologyFormComponent {
     if (this.action === 'edit') {
       this.technology = { ... data.object };
       this.dialogTitle = `Tecnología N°
-        ${this.technology.idTechnology} - ${this.technology.name} ${this.technology.version ? this.technology.version : '' }`;
+        ${this.technology.id} - ${this.technology.name} ${this.technology.version ? this.technology.version : '' }`;
     } else {
       this.dialogTitle = 'Crear tecnología';
       this.technology = {} as TechnologyDTO;
@@ -43,7 +43,7 @@ export class TechnologyFormComponent {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      idTechnology: [this.technology.idTechnology],
+      idTechnology: [this.technology.id],
       name: [this.technology.name, [Validators.required, Validators.maxLength(40)]],
       version: [this.technology.version, [Validators.maxLength(40)]]
     });
@@ -56,7 +56,6 @@ export class TechnologyFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.technologyForm.getRawValue();
     this.technologyService.save(this.technologyForm.getRawValue()).subscribe((data) => {
         console.log(data);
     });

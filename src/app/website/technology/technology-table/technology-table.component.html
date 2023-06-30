@@ -66,7 +66,7 @@
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">ID</mat-header-cell>
-                  <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.idTechnology}}</mat-cell>
+                  <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.id}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="name">
                   <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-18'"> Nombre
@@ -103,7 +103,7 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+            <div *ngIf="false" class="tbl-spinner">
               <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
               </mat-progress-spinner>
             </div>

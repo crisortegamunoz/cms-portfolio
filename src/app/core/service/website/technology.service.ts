@@ -11,47 +11,19 @@ import { environment } from '../../../../environments/environment';
 })
 export class TechnologyService extends UnsubscribeOnDestroyAdapter {
 
-  private readonly API_URL = 'assets/data/technology-data.json';
-  private SERVICE = `/api/technologies`
-  isTblLoading = true;
-  dataChange: BehaviorSubject<TechnologyDTO[]> = new BehaviorSubject<TechnologyDTO[]>([]);
-  // Temporarily stores data from dialogs
-  dialogData!: TechnologyDTO;
+  private SERVICE = `/api/technologies`;
 
   constructor(private httpClient: HttpClient) {
     super();
   }
 
-  get data(): TechnologyDTO[] {
-    return this.dataChange.value;
-  }
-
-  getDialogData() {
-    return this.dialogData;
-  }
-
-
-  getAllAdvanceTables(): void {
-    this.subs.sink = this.httpClient
-      .get<TechnologyDTO[]>(this.API_URL)
-      .subscribe({
-        next: (data) => {
-          this.isTblLoading = false;
-          this.dataChange.next(data);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.isTblLoading = false;
-          console.log(error.name + ' ' + error.message);
-        },
-      });
-  }
 
   getAll(): Observable<TechnologyDTO[]> {
     return this.httpClient.get<TechnologyDTO[]>(`${this.SERVICE}`);
   }
 
   save(technology: TechnologyDTO): Observable<TechnologyDTO> {
-    if (technology.idTechnology) {
+    if (technology.id) {
       return this.httpClient.put<TechnologyDTO>(`${this.SERVICE}`, technology);
     } else {
       return this.httpClient.post<TechnologyDTO>(`${this.SERVICE}`, technology);

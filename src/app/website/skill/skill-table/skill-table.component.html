@@ -70,24 +70,30 @@
                   <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.id}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="name">
-                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'"> Nombre
+                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-15'"> Nombre
                   </mat-header-cell>
-                  <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
+                  <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-15"><span
                       class="mobile-label">Nombre:</span>
-                      <span class="mobile-label">Nombre:</span>{{row.name}}
+                      <span class="mobile-label">Nombre:</span>{{row.name ? row.name : 'Sin asignar'}}
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="available">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Sección
+                <ng-container matColumnDef="show">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Mostrar
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                    <span class="mobile-label">Sección:</span>{{row.available}}</mat-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
+                    <span class="mobile-label">Mostrar:</span>{{row.show ? 'Sí' : 'No'}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="technologyName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Tecnología
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
+                    <span class="mobile-label">Tecnología:</span>{{row.technology.name}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="categoryName">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Categoría
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                    <span class="mobile-label">Categoría:</span>{{row.categoryName}}</mat-cell>
+                    <span class="mobile-label">Categoría:</span>{{row.category.name}}</mat-cell>
                 </ng-container>
                 <!-- actions -->
                 <ng-container matColumnDef="actions">
@@ -110,7 +116,7 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+            <div *ngIf="false" class="tbl-spinner">
               <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
               </mat-progress-spinner>
             </div>
@@ -161,11 +167,11 @@
               </button>
             </mat-menu>
             <!-- context menu end -->
-            <div *ngIf="!exampleDatabase?.isTblLoading" class="no-results"
-              [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+            <div *ngIf="false" class="no-results"
+              [style.display]="dataSource && dataSource.data.length === 0 ? '' : 'none'">
               No results
             </div>
-            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+            <mat-paginator #paginator [length]="dataSource && dataSource.data.length" [pageIndex]="0" [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">
             </mat-paginator>
           </div>

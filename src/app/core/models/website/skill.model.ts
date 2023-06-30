@@ -1,12 +1,13 @@
+import { CategoryDTO } from "./category.model";
+import { TechnologyDTO } from "./technology.model";
+
 export interface SkillDTO {
     id: number;
     name?: string;
-    available: boolean;
+    show: boolean;
     percentage?: number;
     cssClass?: string;
     cssStyle?: string;
-    technologyId?: number;
-    technologyName?: string;
-    categoryId: number;
-    categoryName: string;
+    technology: TechnologyDTO;
+    category: CategoryDTO;
 }

@@ -4,22 +4,18 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DataSource } from '@angular/cdk/collections';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Direction } from '@angular/cdk/bidi';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 
 import { CategoryService } from '../../../../core/service/website/category.service';
 import { CategoryDTO } from '../../../../core/models/website/category.model';
 import { CategoryFormComponent } from '../category-form/category-form.component';
-import { DeleteDialogComponent } from '@shared/components/delete-dialog/delete-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { SwalConfig } from '@core/swal/config';
 //import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
 //import { DeleteDialogComponent } from './dialogs/delete/delete.component';
 
@@ -32,136 +28,83 @@ import { DeleteDialogComponent } from '@shared/components/delete-dialog/delete-d
 })
 export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
 
-  displayedColumns = [
-    'id',
-    'name',
-    'section'
-  ];
-  exampleDatabase?: CategoryService;
-  dataSource!: ExampleDataSource;
-  selection = new SelectionModel<CategoryDTO>(true, []);
-  id?: number;
-  category?: CategoryDTO;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
+
+  categories: CategoryDTO[];
+  dataSource!: MatTableDataSource<CategoryDTO>;
+  displayedColumns: string[] = ['id', 'name', 'section', 'actions'];
   contextMenuPosition = { x: '0px', y: '0px' };
+  selection = new SelectionModel<CategoryDTO>(true, []);
+  exampleDatabase?: CategoryService;
 
   constructor(public httpClient: HttpClient,
               public dialog: MatDialog,
               public categoryService: CategoryService,
               private snackBar: MatSnackBar) {
     super();
+    this.categories = [];
   }
 
 
   ngOnInit() {
-    this.loadData();
+    this.getTechnologies();
   }
+
+  getTechnologies() {
+    this.categoryService.getAll().subscribe((categories) => {
+      this.categories = categories;
+      this.dataSource = new MatTableDataSource<CategoryDTO>(this.categories);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
   refresh() {
-    this.loadData();
+    this.getTechnologies();
   }
 
   addNew() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
     const dialogRef = this.dialog.open(CategoryFormComponent, {
       data: {
-        category: this.category,
+        object: {} as CategoryDTO,
         action: 'add',
-      },
-      direction: tempDirection,
+      }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.categoryService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Add Record Successfully...!!!',
-          'bottom',
-          'center'
-        );
+        SwalConfig.successMessage('La categoría fue creada exitosamente!');
+        this.getTechnologies();
       }
     });
   }
 
-  editCall(row: CategoryDTO) {
-    this.id = row.id;
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
+  editItem(category: CategoryDTO) {
     const dialogRef = this.dialog.open(CategoryFormComponent, {
       data: {
-        object: row,
+        object: category,
         action: 'edit',
-      },
-      direction: tempDirection,
+      }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        // When using an edit things are little different, firstly we find record inside DataService by id
-        const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.id === this.id
-        );
-        // Then you update that record using data from dialogData (values you enetered)
-        if (foundIndex != null && this.exampleDatabase) {
-          this.exampleDatabase.dataChange.value[foundIndex] =
-            this.categoryService.getDialogData();
-          // And lastly refresh table
-          this.refreshTable();
-          this.showNotification(
-            'black',
-            'Edit Record Successfully...!!!',
-            'bottom',
-            'center'
-          );
-        }
+        SwalConfig.successMessage(`La categoría N° ${category.id} fue actualizada`);
+        this.getTechnologies();
       }
     });
   }
 
-  deleteItem(row: CategoryDTO) {
-    this.id = row.id;
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      data: row,
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.id === this.id
-        );
-        // for delete we use splice in order to remove single object from DataService
-        if (foundIndex != null && this.exampleDatabase) {
-          this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-          this.refreshTable();
-          this.showNotification(
-            'snackbar-danger',
-            'Delete Record Successfully...!!!',
-            'bottom',
-            'center'
-          );
-        }
+  deleteItem(category: CategoryDTO) {
+    SwalConfig.deleteMessage().then((result) => {
+      if (result.isConfirmed) {
+        this.categoryService.delete(category.id).subscribe(() => {
+            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'La categoría fue eliminada');
+            this.getTechnologies();
+        });
+
       }
     });
   }
@@ -173,7 +116,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
@@ -181,12 +124,12 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
+      : this.dataSource.data.forEach((row) =>
           this.selection.select(row)
         );
   }
   removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
+    /*const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
       const index: number = this.dataSource.renderedData.findIndex(
         (d) => d === item
@@ -194,141 +137,25 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
       this.exampleDatabase?.dataChange.value.splice(index, 1);
       this.refreshTable();
-      this.selection = new SelectionModel<CategoryDTO>(true, []);
+      this.selection = new SelectionModel<TechnologyDTO>(true, []);
     });
     this.showNotification(
       'snackbar-danger',
       totalSelect + ' Record Delete Successfully...!!!',
       'bottom',
       'center'
-    );
+    );*/
   }
-  public loadData() {
-    this.exampleDatabase = new CategoryService(this.httpClient);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
-      this.paginator,
-      this.sort
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
-    );
-  }
-  showNotification(
-    colorName: string,
-    text: string,
-    placementFrom: MatSnackBarVerticalPosition,
-    placementAlign: MatSnackBarHorizontalPosition
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: placementFrom,
-      horizontalPosition: placementAlign,
-      panelClass: colorName,
-    });
-  }
-
 
   // context menu
   onContextMenu(event: MouseEvent, item: CategoryDTO) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
-    if (this.contextMenu !== undefined && this.contextMenu.menu !== null) {
-      this.contextMenu.menuData = { item: item };
-      this.contextMenu.menu.focusFirstItem('mouse');
-      this.contextMenu.openMenu();
-    }
-  }
-}
-export class ExampleDataSource extends DataSource<CategoryDTO> {
-  filterChange = new BehaviorSubject('');
-  get filter(): string {
-    return this.filterChange.value;
-  }
-  set filter(filter: string) {
-    this.filterChange.next(filter);
-  }
-  filteredData: CategoryDTO[] = [];
-  renderedData: CategoryDTO[] = [];
-  constructor(
-    public exampleDatabase: CategoryService,
-    public paginator: MatPaginator,
-    public _sort: MatSort
-  ) {
-    super();
-    // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
-  }
-
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<CategoryDTO[]> {
-    // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
-      this.exampleDatabase.dataChange,
-      this._sort.sortChange,
-      this.filterChange,
-      this.paginator.page,
-    ];
-    this.exampleDatabase.getAllAdvanceTables();
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        // Filter data
-        this.filteredData = this.exampleDatabase.data
-          .slice()
-          .filter((category: CategoryDTO) => {
-            const searchStr = (
-              category.id +
-              category.name +
-              category.section
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-        // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
-        return this.renderedData;
-      })
-    );
-  }
-  disconnect() {
-    //disconnect
-  }
-  /** Returns a sorted copy of the database data. */
-  sortData(data: CategoryDTO[]): CategoryDTO[] {
-    if (!this._sort.active || this._sort.direction === '') {
-      return data;
-    }
-    return data.sort((a, b) => {
-      let propertyA: number | string = '';
-      let propertyB: number | string = '';
-      switch (this._sort.active) {
-        case 'id':
-          [propertyA, propertyB] = [a.id, b.id];
-          break;
-        case 'name':
-          [propertyA, propertyB] = [a.name, b.name];
-          break;
-        case 'section':
-          [propertyA, propertyB] = [a.section, b.section];
-          break;
+      if (this.contextMenu !== undefined && this.contextMenu.menu !== null) {
+        this.contextMenu.menuData = { item: item };
+        this.contextMenu.menu.focusFirstItem('mouse');
+        this.contextMenu.openMenu();
       }
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );
-    });
   }
-
 }

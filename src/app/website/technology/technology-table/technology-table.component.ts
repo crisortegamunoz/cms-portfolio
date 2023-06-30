@@ -5,8 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Direction } from '@angular/cdk/bidi';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { TechnologyDTO } from '@core/models/website/technology.model';
@@ -42,7 +41,6 @@ export class TechnologyTableComponent extends UnsubscribeOnDestroyAdapter implem
     super();
     this.technologies = [];
   }
-
 
   ngOnInit() {
     this.getTechnologies();
@@ -85,7 +83,7 @@ export class TechnologyTableComponent extends UnsubscribeOnDestroyAdapter implem
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        SwalConfig.successMessage(`La tecnología N° ${technology.idTechnology} fue actualizada`);
+        SwalConfig.successMessage(`La tecnología N° ${technology.id} fue actualizada`);
         this.getTechnologies();
       }
     });
@@ -94,7 +92,7 @@ export class TechnologyTableComponent extends UnsubscribeOnDestroyAdapter implem
   deleteItem(technology: TechnologyDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
-        this.technologyService.delete(technology.idTechnology).subscribe(() => {
+        this.technologyService.delete(technology.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'La tecnología fue eliminada');
             this.getTechnologies();
         });

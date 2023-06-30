@@ -55,9 +55,9 @@ export class CategoryFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.categoryService.addAdvanceTable(
-      this.categoryForm.getRawValue()
-    );
+    this.categoryService.save(this.categoryForm.getRawValue()).subscribe((data) => {
+      console.log(data);
+    });
   }
 
 }
