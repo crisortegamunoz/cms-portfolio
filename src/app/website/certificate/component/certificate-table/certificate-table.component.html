@@ -81,7 +81,7 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Imagen
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <img [src]="row.imgUrl" /></mat-cell>
+                    <img [src]="row.imgUrl" loading="lazy"/></mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="entityName">
                   <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Entidad
@@ -93,7 +93,7 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Aprobado
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                    <span class="mobile-label">Aprobado:</span>{{row.completed}}</mat-cell>
+                    <span class="mobile-label">Aprobado:</span>{{row.completed | date: 'dd/MM/yyyy'}}</mat-cell>
                 </ng-container>
                 <!-- actions -->
                 <ng-container matColumnDef="actions">

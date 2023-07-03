@@ -31,5 +31,9 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
     return this.httpClient.delete<boolean>(`${this.SERVICE}/${id}`);
   }
 
+  getBySection(section: string): Observable<CategoryDTO[]> {
+    return this.httpClient.get<CategoryDTO[]>(`${this.SERVICE}/section/${section}`);
+  }
+
 
 }

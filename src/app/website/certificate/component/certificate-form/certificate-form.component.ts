@@ -50,11 +50,10 @@ export class CertificateFormComponent implements OnInit {
     } else {
       this.showPdf = true;
       this.showImg = true;
-      this.dialogTitle = 'Crear categoría';
+      this.dialogTitle = 'Crear Certificado';
       this.certificate = {} as CertificateDTO;
       this.certificateForm = this.createCertificateForm();
     }
-
   }
 
   ngOnInit(): void {
@@ -70,8 +69,8 @@ export class CertificateFormComponent implements OnInit {
   createCertificateForm(): UntypedFormGroup {
     return this.fb.group({
       id: [this.certificate.id],
-      name: [this.certificate.name, [Validators.required]],
-      pdfUrl: [this.certificate.pdfUrl, [Validators.required,]],
+      name: [this.certificate.name, [Validators.required, Validators.maxLength(100)]],
+      pdfUrl: [this.certificate.pdfUrl, [Validators.required, Validators.maxLength(50)]],
       imgUrl: [this.certificate.imgUrl, [Validators.required]],
       entityName: [this.certificate.entityName, [Validators.required]],
       completed: [this.certificate.completed, [Validators.required]],
@@ -87,7 +86,7 @@ export class CertificateFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public confirmAdd(): void {
+  confirmAdd(): void {
     this.uploadFiles(this.loadFiles());
   }
 
@@ -154,7 +153,7 @@ export class CertificateFormComponent implements OnInit {
   }
 
   private loadLists(): Observable<any>  {
-    return this.categoryService.getAll()
+    return this.categoryService.getBySection('CERTIFICATE')
     .pipe(
       switchMap((categories: CategoryDTO[]) => {
         this.categories = categories;

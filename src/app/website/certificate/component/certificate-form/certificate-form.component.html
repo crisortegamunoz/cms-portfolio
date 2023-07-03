@@ -15,14 +15,15 @@
     <form class="register-form m-4" [formGroup]="certificateForm" (ngSubmit)="submit">
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
+          <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic">
             <mat-label>Nombre</mat-label>
             <input matInput formControlName="name">
             <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>drive_file_rename_outline</mat-icon>
+            <!--<mat-hint align="end">{{certificateForm.get('myControl')?.value.length || 0}}/10</mat-hint>-->
           </mat-form-field>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
+          <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic">
             <mat-label>Entidad</mat-label>
             <input matInput formControlName="entityName">
             <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>drive_file_rename_outline</mat-icon>

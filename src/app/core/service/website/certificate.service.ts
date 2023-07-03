@@ -16,7 +16,7 @@ export class CertificateService extends UnsubscribeOnDestroyAdapter {
   }
 
   getAll(): Observable<CertificateDTO[]> {
-    return this.httpClient.get<CertificateDTO[]>(`${this.SERVICE}`);
+    return this.httpClient.get<CertificateDTO[]>(`${this.SERVICE}/desc`);
   }
 
   save(certificate: CertificateDTO): Observable<CertificateDTO> {
