@@ -46,14 +46,14 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
 
 
   ngOnInit() {
-    this.getSkills();
+    this.getCertificates();
   }
 
   refresh() {
-    this.getSkills();
+    this.getCertificates();
   }
 
-  getSkills() {
+  getCertificates() {
     this.certificateService.getAll().subscribe((certificates) => {
       this.certificates = certificates;
       this.dataSource = new MatTableDataSource<CertificateDTO>(this.certificates);
@@ -72,7 +72,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         SwalConfig.successMessage('El certificado fue creado exitosamente!');
-        this.getSkills();
+        this.getCertificates();
       }
     });
   }
@@ -87,7 +87,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         SwalConfig.successMessage(`El certificado N° ${certificate.id} fue actualizado`);
-        this.getSkills();
+        this.getCertificates();
       }
     });
   }
@@ -97,7 +97,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
       if (result.isConfirmed) {
         this.certificateService.delete(skill.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
-            this.getSkills();
+            this.getCertificates();
         });
 
       }
