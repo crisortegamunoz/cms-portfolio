@@ -45,14 +45,14 @@ export class ExperienceTableComponent extends UnsubscribeOnDestroyAdapter implem
 
 
   ngOnInit() {
-    this.getSkills();
+    this.getExperiences();
   }
 
   refresh() {
-    this.getSkills();
+    this.getExperiences();
   }
 
-  getSkills() {
+  getExperiences() {
     this.experienceService.getAll().subscribe((experiences) => {
       this.experiences = experiences;
       this.dataSource = new MatTableDataSource<ExperienceDTO>(this.experiences);
@@ -74,7 +74,7 @@ export class ExperienceTableComponent extends UnsubscribeOnDestroyAdapter implem
       if (result.isConfirmed) {
         this.experienceService.delete(experience.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'La experiencia fue eliminada');
-            this.getSkills();
+            this.getExperiences();
         });
 
       }

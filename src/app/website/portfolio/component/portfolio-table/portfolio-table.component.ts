@@ -8,7 +8,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSnackBar} from '@angular/material/snack-bar';
 
-
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
 import { PortfolioService } from '@core/service/website/portfolio.service';
@@ -45,14 +44,14 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
 
 
   ngOnInit() {
-    this.getSkills();
+    this.getPortfolios();
   }
 
   refresh() {
-    this.getSkills();
+    this.getPortfolios();
   }
 
-  getSkills() {
+  getPortfolios() {
     this.portfolioService.getAll().subscribe((portfolios) => {
       this.portfolios = portfolios;
       this.dataSource = new MatTableDataSource<PortfolioDTO>(this.portfolios);
@@ -74,7 +73,7 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
       if (result.isConfirmed) {
         this.portfolioService.delete(portfolio.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El portafolio fue eliminado');
-            this.getSkills();
+            this.getPortfolios();
         });
 
       }

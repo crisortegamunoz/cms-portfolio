@@ -6,12 +6,14 @@ import { SharedModule } from '@shared';
 import { ComponentsModule } from '@shared/components/components.module';
 
 import { PortfolioRoutingModule } from './portfolio-routing.module';
-import { PortfolioTableComponent } from './portfolio-table/portfolio-table.component';
+import { PortfolioTableComponent } from './component/portfolio-table/portfolio-table.component';
+import { PortfolioFormComponent } from './component/portfolio-form/portfolio-form.component';
 
 
 @NgModule({
   declarations: [
-    PortfolioTableComponent
+    PortfolioTableComponent,
+    PortfolioFormComponent
   ],
   imports: [
     CommonModule,

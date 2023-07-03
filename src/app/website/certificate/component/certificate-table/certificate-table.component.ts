@@ -92,10 +92,10 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
     });
   }
 
-  deleteItem(skill: CertificateDTO) {
+  deleteItem(certificate: CertificateDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
-        this.certificateService.delete(skill.id).subscribe(() => {
+        this.certificateService.delete(certificate.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
             this.getCertificates();
         });
