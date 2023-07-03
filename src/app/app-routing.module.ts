@@ -28,10 +28,10 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'skill',
+        path: 'category',
         loadChildren: () =>
-          import('./website/skill/skill.module').then(
-            (m) => m.SkillModule
+          import('./website/category/category.module').then(
+            (m) => m.CategoryModule
           ),
       },
       {
@@ -42,6 +42,27 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'skill',
+        loadChildren: () =>
+          import('./website/skill/skill.module').then(
+            (m) => m.SkillModule
+          ),
+      },
+      {
+        path: 'about',
+        loadChildren: () =>
+          import('./website/about/about.module').then(
+            (m) => m.AboutModule
+          ),
+      },
+      {
+        path: 'experience',
+        loadChildren: () =>
+          import('./website/experience/experience.module').then(
+            (m) => m.ExperienceModule
+          ),
+      },
+      {
         path: 'certificate',
         loadChildren: () =>
           import('./website/certificate/certificate.module').then(
@@ -49,10 +70,10 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'category',
+        path: 'portfolio',
         loadChildren: () =>
-          import('./website/category/category.module').then(
-            (m) => m.CategoryModule
+          import('./website/portfolio/portfolio.module').then(
+            (m) => m.PortfolioModule
           ),
       },
       {

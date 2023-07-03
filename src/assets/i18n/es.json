@@ -17,6 +17,15 @@
         "DASHBOARD": "Tablero"
       }
     },
+    "ABOUT": {
+      "TEXT": "Sobre mí"
+    },
+    "EXPERIENCE": {
+      "TEXT": "Experiencia"
+    },
+    "PORTFOLIO": {
+      "TEXT": "Portafolio"
+    },
     "SKILL": {
       "TEXT": "Habilidades"
     },
