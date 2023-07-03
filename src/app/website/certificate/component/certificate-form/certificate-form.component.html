@@ -52,7 +52,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="showPdf" class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <mat-label>Subir Certificado (PDF)</mat-label>
           <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic">
@@ -64,7 +64,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="showImg" class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <mat-label>Subir Certificado (PNG)</mat-label>
           <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic">
@@ -74,6 +74,28 @@
             </button>
             <mat-icon matSuffix>folder</mat-icon>
           </mat-form-field>
+        </div>
+      </div>
+      <div *ngIf="!showPdf" class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <mat-label>Ver Certificado (PDF)</mat-label>
+            <button mat-icon-button (click)="showFile(true)">
+              <mat-icon mat-raised-button color="primary">visibility</mat-icon>
+            </button>
+            <button mat-icon-button (click)="removeFile('pdf', 'pdfUrl')">
+              <mat-icon mat-raised-button color="warn">delete</mat-icon>
+            </button>
+        </div>
+      </div>
+      <div *ngIf="!showImg" class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <mat-label>Ver Certificado (Imagen)</mat-label>
+          <button mat-icon-button (click)="showFile(false)">
+            <mat-icon mat-raised-button color="primary">visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="removeFile('img', 'imgUrl')">
+            <mat-icon mat-raised-button color="warn">delete</mat-icon>
+          </button>
         </div>
       </div>
       <div class="row">

@@ -1,0 +1,18 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          Archivo
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content width="100%" height="100%">
+    <iframe *ngIf="showPdf" [src]="pdfUrl" width="100%" height="100%"></iframe>
+    <img *ngIf="!showPdf" [src]="url" alt="certificate image">
+  </div>
+</div>
