@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { ComponentsModule } from '@shared/components/components.module';
 import { PortfolioRoutingModule } from './portfolio-routing.module';
 import { PortfolioTableComponent } from './component/portfolio-table/portfolio-table.component';
 import { PortfolioFormComponent } from './component/portfolio-form/portfolio-form.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -21,7 +22,9 @@ import { PortfolioFormComponent } from './component/portfolio-form/portfolio-for
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule
-  ]
+    SharedModule,
+    NgxSpinnerModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PortfolioModule { }

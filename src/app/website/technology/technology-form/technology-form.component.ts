@@ -43,7 +43,7 @@ export class TechnologyFormComponent {
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      idTechnology: [this.technology.id],
+      id: [this.technology.id],
       name: [this.technology.name, [Validators.required, Validators.maxLength(40)]],
       version: [this.technology.version, [Validators.maxLength(40)]]
     });
