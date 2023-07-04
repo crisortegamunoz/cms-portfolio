@@ -1,1 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
+.loading-overlay {
+  position: relative;
+}
+
+.spinner-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modalHeader,
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-overlay-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8); /* Cambia el valor de opacidad según tus necesidades */
+}
+
+.spinner-overlay-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+}

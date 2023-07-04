@@ -1,18 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatSnackBar} from '@angular/material/snack-bar';
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
 import { PortfolioService } from '@core/service/website/portfolio.service';
 import { SwalConfig } from '@core/swal/config';
-import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-portfolio-table',
@@ -37,7 +38,7 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
   constructor(public httpClient: HttpClient,
               public dialog: MatDialog,
               public portfolioService: PortfolioService,
-              private snackBar: MatSnackBar) {
+              private router: Router) {
     super();
     this.portfolios = [];
   }
@@ -61,11 +62,11 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   addNew() {
-    return;
+    this.router.navigate(['portfolio/form']);
   }
 
   editCall(portfolio: PortfolioDTO) {
-    return;
+    this.router.navigate(['portfolio/form', portfolio.id]);
   }
 
   deleteItem(portfolio: PortfolioDTO) {

@@ -2,119 +2,145 @@
   <div class="content-block">
     <div class="block-header">
       <!-- breadcrumb -->
-      <app-breadcrumb [title]="'Wizard'" [items]="['Home','Forms']" [active_item]="'Wizard'">
+      <app-breadcrumb [title]="'Portafolios'" [items]="['Home','Portafolios']" [active_item]="subtitle">
       </app-breadcrumb>
     </div>
-    <div class="row clearfix">
+    <div class="loading-overlay" *ngIf="loading">
+      <div class="spinner-overlay">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+    <div class="row clearfix" *ngIf="!loading">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="header">
             <h2>
-              <strong>Stepper Horizontal</strong>
+              <strong>{{ title }}</strong>
             </h2>
           </div>
           <div class="body">
+
             <mat-horizontal-stepper [linear]="isLinear" #stepper>
-              <mat-step [stepControl]="HFormGroup1!">
-                <form [formGroup]="HFormGroup1!">
-                  <ng-template matStepLabel>Fill out your name</ng-template>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>First Name</mat-label>
-                    <input matInput formControlName="firstName" required>
-                    <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                  </mat-form-field>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Last Name</mat-label>
-                    <input matInput formControlName="lastName" required>
-                    <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                  </mat-form-field>
+              <mat-step [stepControl]="portfolioStep1!">
+                <form [formGroup]="portfolioStep1!">
+                  <ng-template matStepLabel>Completa la información principal</ng-template>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Proyecto</mat-label>
+                        <input matInput formControlName="portfolioName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                        <mat-error *ngIf="portfolioStep1?.get('portfolioName')?.hasError('required')">
+                          Nombre del portafolio es requerido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Cliente</mat-label>
+                        <input matInput formControlName="clientName">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>business</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Repositorio</mat-label>
+                        <input matInput formControlName="repository">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>code</mat-icon>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Demo</mat-label>
+                        <input matInput formControlName="demo">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>airplay</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Fecha Inicio</mat-label>
+                        <input matInput [matDatepicker]="pickerStart" formControlName="startDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Fecha Fin</mat-label>
+                          <input matInput [matDatepicker]="pickerEnd" formControlName="endDate">
+                          <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerEnd></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width " appearance="outline">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select formControlName="category" required>
+                          <mat-option *ngFor="let category of categories" [value]="category">
+                            {{ category.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="portfolioStep1?.get('category')?.hasError('required')">
+                          Debe seleccionar una categoría
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <ngx-mat-file-input #img formControlName="img" valuePlaceholder="Subir imagen de referencia" [accept]="'.png'"></ngx-mat-file-input>
+                        <button mat-icon-button matSuffix *ngIf="!img.empty" (click)="img.clear($event)">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                        <mat-icon matSuffix>folder</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
                   <div>
                     <button mat-raised-button matStepperNext color="primary"
-                      [disabled]="!HFormGroup1!.valid">Next</button>
+                      [disabled]="!portfolioStep1!.valid">Next</button>
                   </div>
                 </form>
               </mat-step>
-              <mat-step [stepControl]="HFormGroup2!">
-                <form [formGroup]="HFormGroup2!">
-                  <ng-template matStepLabel>Fill out your address</ng-template>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Address</mat-label>
-                    <textarea matInput formControlName="address" placeholder="Ex. 1 Main St, New York, NY"
-                      required></textarea>
-                  </mat-form-field>
-                  <div>
-                    <button mat-raised-button matStepperPrevious color="warn" class="msr-2">Back</button>
-                    <button mat-raised-button matStepperNext color="primary"
-                      [disabled]="!HFormGroup2!.valid">Next</button>
+              <mat-step [stepControl]="portfolioStep2!">
+                <form [formGroup]="portfolioStep2!">
+                  <ng-template matStepLabel>Selecciona las tecnologías</ng-template>
+                  <div class="row" formArrayName="technologyList">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let techControl of technologyControls.controls; let i = index">
+                      <div class="flex-container">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Seleccione una Tecnología</mat-label>
+                          <mat-select [formControlName]="i" required>
+                            <mat-option *ngFor="let tech of technologies" [value]="tech">{{ tech.name }}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="portfolioStep2?.get('technologyList')?.invalid && portfolioStep2?.get('technologyList')?.hasError('required')">
+                            La tecnología es obligatoria
+                          </mat-error>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" (click)="removeTechnology(i)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
                   </div>
+                  <button mat-raised-button color="primary" (click)="addTechnology()">Agregar Tecnología</button>
                 </form>
               </mat-step>
               <mat-step>
-                <ng-template matStepLabel>Done</ng-template>
-                <p>You are now done.</p>
+                <ng-template matStepLabel>Hecho</ng-template>
+                <p>Completaste el formulario. Puedes corroborar si todo quedó como querias o puedes presionar confirmar para guardar</p>
                 <div>
                   <button mat-raised-button matStepperPrevious color="warn" class="msr-2">Back</button>
-                  <button mat-raised-button color="primary" (click)="stepper.reset()">Reset</button>
+                  <button mat-raised-button color="primary" (click)="stepper.reset()">Confirmar</button>
                 </div>
               </mat-step>
             </mat-horizontal-stepper>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row clearfix">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="card">
-          <div class="header">
-            <h2>
-              <strong>Stepper Verticle</strong>
-            </h2>
-          </div>
-          <div class="body">
-            <mat-vertical-stepper [linear]="isLinear" #stepper>
-              <mat-step [stepControl]="VFormGroup1!">
-                <form [formGroup]="VFormGroup1!">
-                  <ng-template matStepLabel>Fill out your name</ng-template>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>First Name</mat-label>
-                    <input matInput formControlName="firstName" required>
-                    <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                  </mat-form-field>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Last Name</mat-label>
-                    <input matInput formControlName="lastName" required>
-                    <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                  </mat-form-field>
-                  <div>
-                    <button mat-raised-button matStepperNext color="primary"
-                      [disabled]="!VFormGroup1!.valid">Next</button>
-                  </div>
-                </form>
-              </mat-step>
-              <mat-step [stepControl]="VFormGroup2!">
-                <form [formGroup]="VFormGroup2!">
-                  <ng-template matStepLabel>Fill out your address</ng-template>
-                  <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Address</mat-label>
-                    <textarea matInput formControlName="address" placeholder="Ex. 1 Main St, New York, NY"
-                      required></textarea>
-                  </mat-form-field>
-                  <div>
-                    <button mat-raised-button matStepperPrevious color="warn" class="msr-2">Back</button>
-                    <button mat-raised-button matStepperNext color="primary"
-                      [disabled]="!VFormGroup2!.valid">Next</button>
-                  </div>
-                </form>
-              </mat-step>
-              <mat-step>
-                <ng-template matStepLabel>Done</ng-template>
-                <p>You are now done.</p>
-                <div>
-                  <button mat-raised-button matStepperPrevious color="warn" class="msr-2">Back</button>
-                  <button mat-raised-button color="primary" (click)="stepper.reset()">Reset</button>
-                </div>
-              </mat-step>
-            </mat-vertical-stepper>
+
           </div>
         </div>
       </div>

@@ -40,20 +40,12 @@ export class CertificateFormComponent implements OnInit {
               private dialog: MatDialog) {
     // Set the defaults
     this.categories = [];
+    this.showPdf = false;
+    this.showImg = false;
+    this.dialogTitle = '';
+    this.certificate = {} as CertificateDTO;
+    this.certificateForm = this.createCertificateForm()
     this.action = data.action;
-    if (this.action === 'edit') {
-      this.showPdf = false;
-      this.showImg = false;
-      this.certificate = { ... data.object };
-      this.dialogTitle = `${this.certificate.name}`;
-      this.certificateForm = this.createCertificateForm();
-    } else {
-      this.showPdf = true;
-      this.showImg = true;
-      this.dialogTitle = 'Crear Certificado';
-      this.certificate = {} as CertificateDTO;
-      this.certificateForm = this.createCertificateForm();
-    }
   }
 
   ngOnInit(): void {
@@ -157,6 +149,17 @@ export class CertificateFormComponent implements OnInit {
     .pipe(
       switchMap((categories: CategoryDTO[]) => {
         this.categories = categories;
+        if (this.action === 'edit') {
+          this.showPdf = false;
+          this.showImg = false;
+          this.certificate = { ... this.data.object };
+          this.dialogTitle = `Editar Certificado N° ${this.certificate.id}`;
+          this.certificateForm.patchValue(this.certificate);
+        } else {
+          this.showPdf = true;
+          this.showImg = true;
+          this.dialogTitle = 'Crear Certificado';
+        }
         return of();
       })
     );

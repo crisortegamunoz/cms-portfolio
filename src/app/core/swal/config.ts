@@ -18,6 +18,14 @@ export class SwalConfig {
     )
   }
 
+  public static simpleModalWarning(title: string, message: string) {
+    Swal.fire(
+      title,
+      message,
+      'warning'
+    )
+  }
+
   public static successMessage(message: string): void {
     Swal.fire({
       position: 'center',
