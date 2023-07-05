@@ -69,31 +69,31 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-7'">ID</mat-header-cell>
                   <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.id}}</mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="name">
+                <ng-container matColumnDef="portfolioName">
                   <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-20'"> Nombre
                   </mat-header-cell>
                   <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-20"><span
                       class="mobile-label">Nombre:</span>
-                      <span class="mobile-label">Nombre:</span>{{row.name ? row.name : 'Sin asignar'}}
+                      <span class="mobile-label">Nombre:</span>{{ row.portfolioName }}
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="image">
+                <ng-container matColumnDef="img">
                   <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Imagen
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <span class="mobile-label">Imagen:</span>{{row.imgUrl}}</mat-cell>
+                    <img [src]="row.img" loading="lazy"/></mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="entityName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Entidad
+                <ng-container matColumnDef="clientName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-15">Cliente
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <span class="mobile-label">Entidad:</span>{{row.entityName}}</mat-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-15">
+                    <span class="mobile-label">Cliente:</span>{{ row.clientName }}</mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="completed">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Completado
+                <ng-container matColumnDef="categoryName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Categoría
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                    <span class="mobile-label">Completado:</span>{{row.completed}}</mat-cell>
+                    <span class="mobile-label">Categoría:</span>{{ row.category.name }}</mat-cell>
                 </ng-container>
                 <!-- actions -->
                 <ng-container matColumnDef="actions">

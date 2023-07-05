@@ -29,7 +29,7 @@ export class AboutTableComponent  extends UnsubscribeOnDestroyAdapter implements
 
   abouts: AboutDTO[];
   dataSource!: MatTableDataSource<AboutDTO>;
-  displayedColumns: string[] = ['id', 'name', 'image', 'entityName', 'completed', 'actions'];
+  displayedColumns: string[] = ['id', 'title', 'actions'];
   contextMenuPosition = { x: '0px', y: '0px' };
   selection = new SelectionModel<AboutDTO>(true, []);
   exampleDatabase?: AboutService;

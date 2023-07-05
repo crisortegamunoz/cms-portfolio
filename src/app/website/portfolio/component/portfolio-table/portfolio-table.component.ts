@@ -13,6 +13,7 @@ import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
 import { PortfolioService } from '@core/service/website/portfolio.service';
 import { SwalConfig } from '@core/swal/config';
+import { CommonFunctions } from '@core/util/common';
 
 
 @Component({
@@ -27,10 +28,10 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
-
+  private PATH = 'images/portfolio';
   portfolios: PortfolioDTO[];
   dataSource!: MatTableDataSource<PortfolioDTO>;
-  displayedColumns: string[] = ['id', 'name', 'image', 'entityName', 'completed', 'actions'];
+  displayedColumns: string[] = ['id', 'portfolioName', 'img', 'clientName', 'categoryName', 'actions'];
   contextMenuPosition = { x: '0px', y: '0px' };
   selection = new SelectionModel<PortfolioDTO>(true, []);
   exampleDatabase?: PortfolioService;
@@ -72,11 +73,17 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
   deleteItem(portfolio: PortfolioDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
-        this.portfolioService.delete(portfolio.id).subscribe(() => {
-            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El portafolio fue eliminado');
-            this.getPortfolios();
+       const files: string[] = CommonFunctions.createFilePaths(this.PATH, CommonFunctions.getFilePathByUrl([portfolio.img]));
+       CommonFunctions.deleteFilesFromFirebase(files)
+        .then(() => {
+          this.portfolioService.delete(portfolio.id).subscribe(() => {
+              SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
+              this.getPortfolios();
+          });
+        })
+        .catch(error => {
+          SwalConfig.simpleModalError('Error', 'Hubo un error al intentar eliminar los archivos desde Firebase');
         });
-
       }
     });
   }

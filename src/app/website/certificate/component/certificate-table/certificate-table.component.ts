@@ -15,6 +15,7 @@ import { CertificateService } from '@core/service/website/certificate.service';
 import { SwalConfig } from '@core/swal/config';
 import { MatTableDataSource } from '@angular/material/table';
 import { CertificateFormComponent } from '../certificate-form/certificate-form.component';
+import { CommonFunctions } from '@core/util/common';
 
 @Component({
   selector: 'app-certificate-table',
@@ -28,7 +29,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
-
+  private PATH = 'images/certificate';
   certificates: CertificateDTO[];
   dataSource!: MatTableDataSource<CertificateDTO>;
   displayedColumns: string[] = ['id', 'name', 'image', 'entityName', 'completed', 'actions'];
@@ -95,11 +96,17 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
   deleteItem(certificate: CertificateDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
-        this.certificateService.delete(certificate.id).subscribe(() => {
-            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
-            this.getCertificates();
+       const files: string[] = CommonFunctions.createFilePaths(this.PATH, CommonFunctions.getFilePathByUrl([certificate.imgUrl, certificate.pdfUrl]));
+       CommonFunctions.deleteFilesFromFirebase(files)
+        .then(() => {
+          this.certificateService.delete(certificate.id).subscribe(() => {
+              SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El certificado fue eliminado');
+              this.getCertificates();
+          });
+        })
+        .catch(error => {
+          SwalConfig.simpleModalError('Error', 'Hubo un error al intentar eliminar los archivos desde Firebase');
         });
-
       }
     });
   }

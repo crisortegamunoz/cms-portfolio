@@ -12,6 +12,7 @@ import { CategoryDTO } from '@core/models/website/category.model';
 import { CategoryService } from '@core/service/website/category.service';
 import { CertificateService } from '@core/service/website/certificate.service';
 import { ImageComponent } from '@shared/components/image/image.component';
+import { CommonFunctions } from '@core/util/common';
 
 
 @Component({
@@ -102,32 +103,21 @@ export class CertificateFormComponent implements OnInit {
   }
 
   private saveCertificate(filesUrl: string[]): void {
-    const pdfUrl = filesUrl.find(value => value.includes('pdf') || this.certificate.pdfUrl);
-    const imgUrl = filesUrl.find(value => value.includes('png') || this.certificate.imgUrl);
+    const pdfUrl = filesUrl.find(value => value.includes('pdf'));
+    const imgUrl = filesUrl.find(value => value.includes('png'));
     this.certificate = this.certificateForm.getRawValue();
-    this.certificate.pdfUrl = pdfUrl;
-    this.certificate.imgUrl = imgUrl;
+    this.certificate.pdfUrl = pdfUrl ? pdfUrl : this.certificate.pdfUrl;
+    this.certificate.imgUrl = imgUrl ? imgUrl : this.certificate.imgUrl;
     this.certificateService.save(this.certificate).subscribe((data) => {
       this.dialogRef.close();
     });
   }
 
   private uploadFiles(files: File[]): void {
-    const uploadPromises: Promise<UploadResult>[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const file: File = files[i];
-      const storageRef = ref(this.storage, `${this.PATH}/${file.name}`);
-      const uploadPromise = uploadBytes(storageRef, file);
-      uploadPromises.push(uploadPromise);
-    }
+    const uploadPromises: Promise<UploadResult>[] = CommonFunctions.uploadToFirebase(files, this.PATH);
     Promise.all(uploadPromises)
       .then((snapshots: UploadResult[]) => {
-        const downloadURLPromises: Promise<string>[] = [];
-        snapshots.forEach((snapshot: UploadResult) => {
-          const storageRef = ref(this.storage, snapshot.ref.fullPath);
-          const downloadURLPromise = getDownloadURL(storageRef);
-          downloadURLPromises.push(downloadURLPromise);
-        });
+        const downloadURLPromises: Promise<string>[] = CommonFunctions.getUrlFromFirebase(snapshots);
         return Promise.all(downloadURLPromises);
       })
       .then((downloadURLs: string[]) => {

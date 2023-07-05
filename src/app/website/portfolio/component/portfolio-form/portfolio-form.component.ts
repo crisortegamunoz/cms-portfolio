@@ -1,11 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormArray, FormGroup, FormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Observable, of, switchMap } from 'rxjs';
-import { getStorage, ref, uploadBytes, UploadResult, getDownloadURL } from 'firebase/storage';
-import { initializeApp } from 'firebase/app';
-import { environment } from '../../../../../environments/environment';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Validators, FormArray, FormGroup, FormBuilder } from '@angular/forms';
+import { switchMap } from 'rxjs';
+import { UploadResult } from 'firebase/storage';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CategoryDTO } from '@core/models/website/category.model';
 import { CategoryService } from '@core/service/website/category.service';
@@ -13,8 +10,9 @@ import { TechnologyService } from '@core/service/website/technology.service';
 import { TechnologyDTO } from '@core/models/website/technology.model';
 import { SwalConfig } from '@core/swal/config';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
-import { CustomValidators } from '@core/validator/custom';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { CommonFunctions } from '@core/util/common';
+import { PortfolioService } from '@core/service/website/portfolio.service';
 
 
 @Component({
@@ -36,7 +34,10 @@ export class PortfolioFormComponent implements OnInit {
   portfolio: PortfolioDTO;
   maxDate: Date;
   private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+  private PATH = 'images/portfolio';
   constructor(private route: ActivatedRoute,
+              private router: Router,
+              private portfolioService: PortfolioService,
               private categoryService: CategoryService,
               private technologyService: TechnologyService,
               private formBuilder: FormBuilder,
@@ -67,7 +68,7 @@ export class PortfolioFormComponent implements OnInit {
   }
 
   create() {
-    this.loading = true;
+    this.spinner.show();
     const steps = this.validateSteps();
     if (steps.length > 0) {
       const lastStep = steps.length > 1 ?  steps.pop() : null;
@@ -76,9 +77,34 @@ export class PortfolioFormComponent implements OnInit {
       this.loading = false;
       return;
     }
+    this.uploadFiles([this.portfolioStep1?.getRawValue().img.files[0]]);
+  }
+
+  private savePortfolio(fileUrl: string): void {
+    const img = fileUrl ? fileUrl : this.portfolio.img;
     this.portfolio = this.portfolioStep1?.getRawValue();
     this.portfolio.technologies = this.portfolioStep2?.getRawValue().technologyList;
     this.portfolio.descriptions = this.portfolioStep3?.getRawValue().descriptionList;
+    this.portfolio.img = img;
+    this.portfolioService.save(this.portfolio).subscribe(() => {
+      this.spinner.hide();
+      this.router.navigate(['portfolio']);
+    });
+  }
+
+  private uploadFiles(files: File[]): void {
+    const uploadPromises: Promise<UploadResult>[] = CommonFunctions.uploadToFirebase(files, this.PATH);
+    Promise.all(uploadPromises)
+      .then((snapshots: UploadResult[]) => {
+        const downloadURLPromises: Promise<string>[] = CommonFunctions.getUrlFromFirebase(snapshots);
+        return Promise.all(downloadURLPromises);
+      })
+      .then((downloadURLs: string[]) => {
+        this.savePortfolio(downloadURLs.length > 0 ? downloadURLs[0] : '');
+      })
+      .catch((error: any) => {
+        console.error('Error al subir las imágenes:', error);
+      });
   }
 
   get technologyControls() {
@@ -135,7 +161,7 @@ export class PortfolioFormComponent implements OnInit {
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
-    //this.loading = false;
+    this.showComponent();
   }
 
   private loadFormById(id: number) {
@@ -143,14 +169,14 @@ export class PortfolioFormComponent implements OnInit {
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
-    //this.loading = false;
+    this.showComponent();
   }
 
   private loadFormStep1() {
     this.portfolioStep1 = this.formBuilder.group({
       portfolioName: ['', Validators.required],
       clientName: [''],
-      repository: ['', Validators.pattern(this.REG)],
+      repository: [''],
       demo: ['', Validators.pattern(this.REG)],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
@@ -184,6 +210,11 @@ export class PortfolioFormComponent implements OnInit {
       }
       return array;
     }, []);
+  }
+
+  private showComponent() {
+    this.loading = !this.loading;
+    this.spinner.hide();
   }
 
 }

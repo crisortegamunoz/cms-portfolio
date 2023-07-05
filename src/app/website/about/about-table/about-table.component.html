@@ -2,7 +2,7 @@
   <div class="content-block">
     <div class="block-header">
       <!-- breadcrumb -->
-      <app-breadcrumb [title]="'Certificados'" [items]="['Home']" [active_item]="'Certificados'"></app-breadcrumb>
+      <app-breadcrumb [title]="'Sobre mí'" [items]="['Home']" [active_item]="'Sobre mí'"></app-breadcrumb>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,7 +11,7 @@
             <div class="left">
               <ul class="header-buttons-left ms-0">
                 <li class="tbl-title">
-                  <h2>Listado de Certificados</h2>
+                  <h2>Listado de información personal</h2>
                 </li>
                 <li class="tbl-search-box">
                   <label for="search-input"><i class="material-icons search-icon">search</i></label>
@@ -69,31 +69,13 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-7'">ID</mat-header-cell>
                   <mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7">{{row.id}}</mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="name">
-                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-20'"> Nombre
+                <ng-container matColumnDef="title">
+                  <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-20'"> Titulo
                   </mat-header-cell>
                   <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-20"><span
-                      class="mobile-label">Nombre:</span>
-                      <span class="mobile-label">Nombre:</span>{{row.name ? row.name : 'Sin asignar'}}
+                      class="mobile-label">Titulo:</span>
+                      <span class="mobile-label">Titulo:</span>{{row.title}}
                   </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="image">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Imagen
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <span class="mobile-label">Imagen:</span>{{row.imgUrl}}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="entityName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Entidad
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <span class="mobile-label">Entidad:</span>{{row.entityName}}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="completed">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Completado
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                    <span class="mobile-label">Completado:</span>{{row.completed}}</mat-cell>
                 </ng-container>
                 <!-- actions -->
                 <ng-container matColumnDef="actions">
