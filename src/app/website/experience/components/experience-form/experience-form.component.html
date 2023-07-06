@@ -1,0 +1,166 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Experiencias'" [items]="['Home','Experiencias']" [active_item]="subtitle">
+      </app-breadcrumb>
+    </div>
+
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color = "#fff" type = "square-jelly-box"
+                       [fullScreen]="false">
+            <p style="color: white" > Cargando...</p>
+          </ngx-spinner>
+          <div class="header">
+            <h2>
+              <strong>{{ title }}</strong>
+            </h2>
+          </div>
+          <div class="body">
+            <mat-horizontal-stepper *ngIf="!loading" [linear]="isLinear" #stepper>
+              <mat-step [stepControl]="experienceStep1!">
+                <form [formGroup]="experienceStep1!">
+                  <ng-template matStepLabel>Completa la información principal</ng-template>
+                  <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Rol</mat-label>
+                        <input matInput formControlName="roleName">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Descripción del Rol</mat-label>
+                        <textarea matInput formControlName="roleDescription"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Entidad</mat-label>
+                        <input matInput formControlName="entityName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Ubicación</mat-label>
+                        <input matInput formControlName="location" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Descripción del Entidad</mat-label>
+                        <textarea matInput formControlName="entityDescription"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Fecha Inicio</mat-label>
+                        <input matInput [max]="maxDate" [matDatepicker]="pickerStart" formControlName="periodStart">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Fecha Fin</mat-label>
+                          <input matInput [max]="maxDate" [matDatepicker]="pickerEnd" formControlName="periodEnd">
+                          <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerEnd></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width " appearance="outline">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select formControlName="category" required>
+                          <mat-option *ngFor="let category of categories" [value]="category">
+                            {{ category.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="experienceStep1?.get('category')?.hasError('required')">
+                          Debe seleccionar una categoría
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div>
+                    <button mat-raised-button matStepperNext color="primary"
+                      [disabled]="!experienceStep1!.valid">Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="experienceStep2!">
+                <form [formGroup]="experienceStep2!">
+                  <ng-template matStepLabel>Selecciona las tecnologías</ng-template>
+                  <div class="row" formArrayName="technologyList">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let techControl of technologyControls.controls; let i = index">
+                      <div class="flex-container">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Seleccione una Tecnología</mat-label>
+                          <mat-select [formControlName]="i">
+                            <mat-option *ngFor="let tech of technologies" [value]="tech">{{ tech.name }}  {{ tech.version ? tech.version : '' }}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="experienceStep2?.get('technologyList')?.invalid && experienceStep2?.get('technologyList')?.hasError('required')">
+                            La tecnología es obligatoria
+                          </mat-error>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" (click)="removeTechnology(i)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <button mat-raised-button color="primary" (click)="addTechnology()">Agregar Tecnología</button>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="experienceStep3!">
+                <form [formGroup]="experienceStep3!">
+                  <ng-template matStepLabel>Ingresa las responsabilidades</ng-template>
+                  <div class="row" formArrayName="descriptionList">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let descControl of descriptionControls.controls; let i = index">
+                      <div class="flex-container">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Responsabilidad</mat-label>
+                          <textarea matInput [formControlName]="i" required></textarea>
+                          <mat-error *ngIf="experienceStep3?.get('descriptionList')?.invalid && experienceStep3?.get('descriptionList')?.hasError('required')">
+                            Debe completar la responsabilidad que tuvo
+                          </mat-error>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" (click)="removeDescription(i)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <button mat-raised-button color="primary" (click)="addDescription()">Agregar descripción</button>
+                </form>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>Hecho</ng-template>
+                <p>Completaste el formulario. Puedes corroborar si todo quedó como querias o puedes presionar confirmar para guardar</p>
+                <div>
+                  <button mat-raised-button matStepperPrevious color="warn" class="msr-2">Back</button>
+                  <button mat-raised-button color="primary" (click)="create()">Confirmar</button>
+                </div>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

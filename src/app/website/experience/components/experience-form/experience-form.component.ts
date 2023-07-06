@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { switchMap } from 'rxjs';
-import { UploadResult } from 'firebase/storage';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CategoryDTO } from '@core/models/website/category.model';
@@ -9,18 +8,16 @@ import { CategoryService } from '@core/service/website/category.service';
 import { TechnologyService } from '@core/service/website/technology.service';
 import { TechnologyDTO } from '@core/models/website/technology.model';
 import { SwalConfig } from '@core/swal/config';
-import { PortfolioDTO } from '@core/models/website/portfolio.model';
+import { ExperienceDTO } from '@core/models/website/experience.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CommonFunctions } from '@core/util/common';
-import { PortfolioService } from '@core/service/website/portfolio.service';
-
+import { ExperienceService } from '@core/service/website/experience.service';
 
 @Component({
-  selector: 'app-portfolio-form',
-  templateUrl: './portfolio-form.component.html',
-  styleUrls: ['./portfolio-form.component.scss']
+  selector: 'app-experience-form',
+  templateUrl: './experience-form.component.html',
+  styleUrls: ['./experience-form.component.scss']
 })
-export class PortfolioFormComponent implements OnInit {
+export class ExperienceFormComponent implements OnInit {
 
   loading: boolean;
   title: string;
@@ -28,16 +25,16 @@ export class PortfolioFormComponent implements OnInit {
   categories: CategoryDTO[];
   technologies: TechnologyDTO[];
   isLinear = false;
-  portfolioStep1?: FormGroup;
-  portfolioStep2?: FormGroup;
-  portfolioStep3?: FormGroup;
-  portfolio: PortfolioDTO;
+  experienceStep1?: FormGroup;
+  experienceStep2?: FormGroup;
+  experienceStep3?: FormGroup;
+  experience: ExperienceDTO;
   maxDate: Date;
   private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
   private PATH = 'images/portfolio';
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private portfolioService: PortfolioService,
+              private experienceService: ExperienceService,
               private categoryService: CategoryService,
               private technologyService: TechnologyService,
               private formBuilder: FormBuilder,
@@ -47,13 +44,13 @@ export class PortfolioFormComponent implements OnInit {
       this.subtitle = '';
       this.categories = [];
       this.technologies = [];
-      this.portfolio = {} as PortfolioDTO;
+      this.experience = {} as ExperienceDTO;
       this.maxDate = new Date();
   }
 
   ngOnInit() {
     this.spinner.show();
-    this.categoryService.getBySection('PORTFOLIO').pipe(
+    this.categoryService.getBySection('EXPERIENCE').pipe(
       switchMap(categories => {
         this.categories = categories;
         return this.technologyService.getAll();
@@ -77,42 +74,27 @@ export class PortfolioFormComponent implements OnInit {
       this.spinner.hide();
       return;
     }
-    this.uploadFiles([this.portfolioStep1?.getRawValue().img.files[0]]);
+    this.savePortfolio();
   }
 
-  private savePortfolio(fileUrl: string): void {
-    const img = fileUrl ? fileUrl : this.portfolio.img;
-    this.portfolio = this.portfolioStep1?.getRawValue();
-    this.portfolio.technologies = this.portfolioStep2?.getRawValue().technologyList;
-    this.portfolio.descriptions = this.portfolioStep3?.getRawValue().descriptionList;
-    this.portfolio.img = img;
-    this.portfolioService.save(this.portfolio).subscribe(() => {
+  private savePortfolio(): void {
+    this.experience = this.experienceStep1?.getRawValue();
+    this.experience.technologies = this.experienceStep2?.getRawValue().technologyList;
+    this.experience.responsibilities = this.experienceStep3?.getRawValue().descriptionList;
+    this.experienceService.save(this.experience).subscribe(() => {
       this.spinner.hide();
-      this.router.navigate(['portfolio']);
+      this.router.navigate(['experience']);
     });
   }
 
-  private uploadFiles(files: File[]): void {
-    const uploadPromises: Promise<UploadResult>[] = CommonFunctions.uploadToFirebase(files, this.PATH);
-    Promise.all(uploadPromises)
-      .then((snapshots: UploadResult[]) => {
-        const downloadURLPromises: Promise<string>[] = CommonFunctions.getUrlFromFirebase(snapshots);
-        return Promise.all(downloadURLPromises);
-      })
-      .then((downloadURLs: string[]) => {
-        this.savePortfolio(downloadURLs.length > 0 ? downloadURLs[0] : '');
-      })
-      .catch((error: any) => {
-        console.error('Error al subir las imágenes:', error);
-      });
-  }
-
   get technologyControls() {
-    return this.portfolioStep2?.get('technologyList') as FormArray;
+    return this.experienceStep2?.get('technologyList') as FormArray;
   }
 
   addTechnology() {
-    if (this.technologyControls.controls.some(control => control.value !== null && control.value !== '')) {
+    if (this.technologyControls.controls.length === 0) {
+      this.technologyControls.push(this.formBuilder.control(null));
+    } else if (this.technologyControls.controls.some(control => control.value !== null && control.value !== '')) {
       this.technologyControls.push(this.formBuilder.control(null));
     } else {
       SwalConfig.simpleModalWarning('Oops!', 'Recuerda seleccionar una tecnología antes de agregar una nueva');
@@ -120,28 +102,24 @@ export class PortfolioFormComponent implements OnInit {
   }
 
   removeTechnology(index: number) {
-    if (this.technologyControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna tecnología seleccionada');
-    } else {
-      this.technologyControls.removeAt(index);
-    }
+    this.technologyControls.removeAt(index);
   }
 
   get descriptionControls() {
-    return this.portfolioStep3?.get('descriptionList') as FormArray;
+    return this.experienceStep3?.get('descriptionList') as FormArray;
   }
 
   addDescription() {
     if (this.descriptionControls.controls.some(control => control.value !== null && control.value !== '')) {
       this.descriptionControls.push(this.formBuilder.control(null));
     } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda completar la descripción antes de agregar una nueva');
+      SwalConfig.simpleModalWarning('Oops!', 'Recuerda completar la responsabilidad antes de agregar una nueva');
     }
   }
 
   removeDescription(index: number) {
     if (this.descriptionControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna descripción');
+      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna responsabilidad');
     } else {
       this.descriptionControls.removeAt(index);
     }
@@ -157,7 +135,7 @@ export class PortfolioFormComponent implements OnInit {
 
   private initForm() {
     this.subtitle = `Crear`;
-    this.title = 'Crear Nuevo Portafolio'
+    this.title = 'Crear Nueva Experiencia'
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
@@ -165,7 +143,7 @@ export class PortfolioFormComponent implements OnInit {
   }
 
   private loadFormById(id: number) {
-    this.subtitle = `Editar Portafolio N°${id}`;
+    this.subtitle = `Editar Experiencia N°${id}`;
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
@@ -173,36 +151,35 @@ export class PortfolioFormComponent implements OnInit {
   }
 
   private loadFormStep1() {
-    this.portfolioStep1 = this.formBuilder.group({
-      portfolioName: ['', Validators.required],
-      clientName: [''],
-      repository: [''],
-      demo: ['', Validators.pattern(this.REG)],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      img: ['', Validators.required],
-      publishDate: [new Date(), Validators.required],
+    this.experienceStep1 = this.formBuilder.group({
+      roleName: [''],
+      roleDescription: [''],
+      entityName: ['', Validators.required],
+      location: ['', Validators.required],
+      entityDescription: [''],
+      periodStart: ['', Validators.required],
+      periodEnd: [''],
       category: ['', Validators.required],
     });
   }
 
   private loadFormStep2() {
-    this.portfolioStep2 = this.formBuilder.group({
-      technologyList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
+    this.experienceStep2 = this.formBuilder.group({
+      technologyList: this.formBuilder.array([])
     });
   }
 
   private loadFormStep3() {
-    this.portfolioStep3 = this.formBuilder.group({
+    this.experienceStep3 = this.formBuilder.group({
       descriptionList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
     });
   }
 
   private validateSteps(): number[] {
     const steps = [
-      { step: 1, valid: this.portfolioStep1?.valid},
-      { step: 2, valid: this.portfolioStep2?.valid},
-      { step: 3, valid: this.portfolioStep3?.valid}
+      { step: 1, valid: this.experienceStep1?.valid},
+      { step: 2, valid: this.experienceStep2?.valid},
+      { step: 3, valid: this.experienceStep3?.valid}
     ];
     return steps.reduce((array: number[], { step, valid }) => {
       if (!valid) {

@@ -6,14 +6,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatSnackBar} from '@angular/material/snack-bar';
-
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { ExperienceDTO } from '@core/models/website/experience.model';
 import { ExperienceService } from '@core/service/website/experience.service';
 import { SwalConfig } from '@core/swal/config';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-experience-table',
@@ -30,7 +29,7 @@ export class ExperienceTableComponent extends UnsubscribeOnDestroyAdapter implem
 
   experiences: ExperienceDTO[];
   dataSource!: MatTableDataSource<ExperienceDTO>;
-  displayedColumns: string[] = ['id', 'name', 'image', 'entityName', 'completed', 'actions'];
+  displayedColumns: string[] = ['id', 'roleName', 'entityName', 'period', 'actions'];
   contextMenuPosition = { x: '0px', y: '0px' };
   selection = new SelectionModel<ExperienceDTO>(true, []);
   exampleDatabase?: ExperienceService;
@@ -38,7 +37,7 @@ export class ExperienceTableComponent extends UnsubscribeOnDestroyAdapter implem
   constructor(public httpClient: HttpClient,
               public dialog: MatDialog,
               public experienceService: ExperienceService,
-              private snackBar: MatSnackBar) {
+              private router: Router) {
     super();
     this.experiences = [];
   }
@@ -62,11 +61,11 @@ export class ExperienceTableComponent extends UnsubscribeOnDestroyAdapter implem
   }
 
   addNew() {
-    return;
+    this.router.navigate(['experience/form']);
   }
 
   editCall(experience: ExperienceDTO) {
-    return;
+    this.router.navigate(['experience/form', experience.id]);
   }
 
   deleteItem(experience: ExperienceDTO) {

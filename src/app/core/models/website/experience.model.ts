@@ -7,6 +7,7 @@ export interface ExperienceDTO {
   roleDescription: string;
   entityName: string;
   entityDescription: string;
+  entityLocation: string;
   responsibilities: string[];
   periodStart: Date;
   periodEnd: Date;
