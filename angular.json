@@ -35,13 +35,11 @@
               "crossvent",
               "apexcharts",
               "clone-deep",
-              "xlsx/dist/xlsx.mini.min",
               "bezier-easing",
               "@ckeditor/ckeditor5-build-classic",
               "sweetalert2",
               "fast-deep-equal",
-              "rfdc",
-              "xlsx"
+              "rfdc"
             ],
             "inlineStyleLanguage": "scss",
             "assets": [
