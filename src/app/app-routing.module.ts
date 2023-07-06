@@ -84,16 +84,6 @@ const routes: Routes = [
           import('./forms/forms.module').then((m) => m.FormModule),
       },
       {
-        path: 'tables',
-        loadChildren: () =>
-          import('./tables/tables.module').then((m) => m.TablesModule),
-      },
-      {
-        path: 'charts',
-        loadChildren: () =>
-          import('./charts/charts.module').then((m) => m.ChartsModule),
-      },
-      {
         path: 'timeline',
         loadChildren: () =>
           import('./timeline/timeline.module').then((m) => m.TimelineModule),

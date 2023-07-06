@@ -68,8 +68,7 @@
       "TEXT": "Tabellen",
       "LIST": {
         "BASIC": "Tablas básicas",
-        "MATERIAL": "Tablas de materiales",
-        "NGX-DATATABLE": "NGX-Datatable"
+        "MATERIAL": "Tablas de materiales"
       }
     }
   }

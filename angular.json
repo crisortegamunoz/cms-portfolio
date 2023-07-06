@@ -49,9 +49,6 @@
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/@swimlane/ngx-datatable/index.css",
-              "./node_modules/@swimlane/ngx-datatable/themes/material.css",
-              "./node_modules/@swimlane/ngx-datatable/assets/icons.css",
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
               "src/assets/scss/style.scss",
               "src/assets/scss/theme/all-themes.scss",
