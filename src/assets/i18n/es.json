@@ -41,20 +41,6 @@
     "APPS": {
       "TEXT": "Aplicaciones"
     },
-    "TASK": {
-      "TEXT": "Tarea"
-    },
-    "CONTACTS": {
-      "TEXT": "Contactos"
-    },
-    "EMAIL": {
-      "TEXT": "Email",
-      "LIST": {
-        "INBOX": "Bandeja de entrada",
-        "COMPOSE": "Componer",
-        "READ": "Leer el correo electrónico"
-      }
-    },
     "MORE-APPS": {
       "TEXT": "Más aplicaciones",
       "LIST": {
@@ -66,13 +52,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Componentes"
-    },
-    "WIDGETS": {
-      "TEXT": "Widgets",
-      "LIST": {
-        "CHART-WIDGET": "Widget de gráfico",
-        "DATA-WIDGET": "Widget de datos"
-      }
     },
     "FORMS": {
       "TEXT": "Formularios",

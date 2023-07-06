@@ -21,13 +21,6 @@ const routes: Routes = [
           import('./website/dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
       {
-        path: 'advance-table',
-        loadChildren: () =>
-          import('./advance-table/advance-table.module').then(
-            (m) => m.AdvanceTableModule
-          ),
-      },
-      {
         path: 'category',
         loadChildren: () =>
           import('./website/category/category.module').then(
@@ -77,29 +70,9 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'task',
-        loadChildren: () =>
-          import('./task/task.module').then((m) => m.TaskModule),
-      },
-      {
-        path: 'contacts',
-        loadChildren: () =>
-          import('./contacts/contacts.module').then((m) => m.ContactsModule),
-      },
-      {
-        path: 'email',
-        loadChildren: () =>
-          import('./email/email.module').then((m) => m.EmailModule),
-      },
-      {
         path: 'apps',
         loadChildren: () =>
           import('./apps/apps.module').then((m) => m.AppsModule),
-      },
-      {
-        path: 'widget',
-        loadChildren: () =>
-          import('./widget/widget.module').then((m) => m.WidgetModule),
       },
       {
         path: 'ui',

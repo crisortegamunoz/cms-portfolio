@@ -17,25 +17,8 @@
         "DASHBOARD": "Dashboard"
       }
     },
-    "ADVANCE-TABLE": {
-      "TEXT": "Vorab-Tabelle"
-    },
     "APPS": {
       "TEXT": "Apps"
-    },
-    "TASK": {
-      "TEXT": "Aufgabe"
-    },
-    "CONTACTS": {
-      "TEXT": "Kontakte"
-    },
-    "EMAIL": {
-      "TEXT": "Email",
-      "LIST": {
-        "INBOX": "Posteingang",
-        "COMPOSE": "Komponieren",
-        "READ": "E-Mail lesen"
-      }
     },
     "MORE-APPS": {
       "TEXT": "Mehr Apps",
@@ -48,13 +31,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Komponenten"
-    },
-    "WIDGETS": {
-      "TEXT": "Widgets",
-      "LIST": {
-        "CHART-WIDGET": "Diagramm-Widget",
-        "DATA-WIDGET": "Daten-Widget"
-      }
     },
     "FORMS": {
       "TEXT": "Formen",

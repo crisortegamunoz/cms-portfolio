@@ -17,25 +17,8 @@
         "DASHBOARD": "Dashboard"
       }
     },
-    "ADVANCE-TABLE": {
-      "TEXT": "Advance Table"
-    },
     "APPS": {
       "TEXT": "Apps"
-    },
-    "TASK": {
-      "TEXT": "Task"
-    },
-    "CONTACTS": {
-      "TEXT": "Contacts"
-    },
-    "EMAIL": {
-      "TEXT": "Email",
-      "LIST": {
-        "INBOX": "Inbox",
-        "COMPOSE": "Compose",
-        "READ": "Read Email"
-      }
     },
     "MORE-APPS": {
       "TEXT": "More Apps",
@@ -48,13 +31,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Components"
-    },
-    "WIDGETS": {
-      "TEXT": "Widgets",
-      "LIST": {
-        "CHART-WIDGET": "Chart-Widget",
-        "DATA-WIDGET": "Data-Widget"
-      }
     },
     "FORMS": {
       "TEXT": "Forms",
