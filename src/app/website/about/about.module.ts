@@ -6,12 +6,15 @@ import { SharedModule } from '@shared';
 import { ComponentsModule } from '@shared/components/components.module';
 
 import { AboutRoutingModule } from './about-routing.module';
-import { AboutTableComponent } from './about-table/about-table.component';
+import { AboutTableComponent } from './components/about-table/about-table.component';
+import { AboutFormComponent } from './components/about-form/about-form.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
   declarations: [
-    AboutTableComponent
+    AboutTableComponent,
+    AboutFormComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +22,8 @@ import { AboutTableComponent } from './about-table/about-table.component';
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule
+    SharedModule,
+    NgxSpinnerModule
   ]
 })
 export class AboutModule { }

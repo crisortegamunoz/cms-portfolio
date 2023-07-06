@@ -6,13 +6,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatSnackBar} from '@angular/material/snack-bar';
 
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
 import { AboutDTO } from '@core/models/website/about.model';
 import { AboutService } from '@core/service/website/about.service';
 import { SwalConfig } from '@core/swal/config';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-about-table',
@@ -37,21 +37,21 @@ export class AboutTableComponent  extends UnsubscribeOnDestroyAdapter implements
   constructor(public httpClient: HttpClient,
               public dialog: MatDialog,
               public aboutService: AboutService,
-              private snackBar: MatSnackBar) {
+              private router: Router) {
     super();
     this.abouts = [];
   }
 
 
   ngOnInit() {
-    this.getPortfolios();
+    this.getAbouts();
   }
 
   refresh() {
-    this.getPortfolios();
+    this.getAbouts();
   }
 
-  getPortfolios() {
+  getAbouts() {
     this.aboutService.getAll().subscribe((abouts) => {
       this.abouts = abouts;
       this.dataSource = new MatTableDataSource<AboutDTO>(this.abouts);
@@ -61,19 +61,19 @@ export class AboutTableComponent  extends UnsubscribeOnDestroyAdapter implements
   }
 
   addNew() {
-    return;
+    this.router.navigate(['about/form']);
   }
 
   editCall(about: AboutDTO) {
-    return;
+    this.router.navigate(['about/form', about.id]);
   }
 
   deleteItem(about: AboutDTO) {
     SwalConfig.deleteMessage().then((result) => {
       if (result.isConfirmed) {
         this.aboutService.delete(about.id).subscribe(() => {
-            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El portafolio fue eliminado');
-            this.getPortfolios();
+            SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'El información eliminada');
+            this.getAbouts();
         });
 
       }
