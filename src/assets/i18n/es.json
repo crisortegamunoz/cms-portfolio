@@ -38,18 +38,6 @@
     "CERTIFICATE": {
       "TEXT": "Certificados"
     },
-    "APPS": {
-      "TEXT": "Aplicaciones"
-    },
-    "MORE-APPS": {
-      "TEXT": "Más aplicaciones",
-      "LIST": {
-        "CHAT": "Charla",
-        "SUPPORT": "Apoyo",
-        "DRAG-DROP": "Arrastrar y soltar",
-        "CONTACT-GRID": "Cuadrícula de contacto"
-      }
-    },
     "COMPONENTS": {
       "TEXT": "Componentes"
     }

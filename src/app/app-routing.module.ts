@@ -68,11 +68,6 @@ const routes: Routes = [
           import('./website/portfolio/portfolio.module').then(
             (m) => m.PortfolioModule
           ),
-      },
-      {
-        path: 'apps',
-        loadChildren: () =>
-          import('./apps/apps.module').then((m) => m.AppsModule),
       }
     ]
   },

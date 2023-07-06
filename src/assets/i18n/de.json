@@ -20,15 +20,6 @@
     "APPS": {
       "TEXT": "Apps"
     },
-    "MORE-APPS": {
-      "TEXT": "Mehr Apps",
-      "LIST": {
-        "CHAT": "Plaudern",
-        "SUPPORT": "Unterstützung",
-        "DRAG-DROP": "Ziehen und loslassen",
-        "CONTACT-GRID": "Kontakt Grid"
-      }
-    },
     "COMPONENTS": {
       "TEXT": "Komponenten"
     }

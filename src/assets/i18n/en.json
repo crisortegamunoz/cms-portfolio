@@ -20,15 +20,6 @@
     "APPS": {
       "TEXT": "Apps"
     },
-    "MORE-APPS": {
-      "TEXT": "More Apps",
-      "LIST": {
-        "CHAT": "Chat",
-        "SUPPORT": "Support",
-        "DRAG-DROP": "Drag & Drop",
-        "CONTACT-GRID": "Contact Grid"
-      }
-    },
     "COMPONENTS": {
       "TEXT": "Components"
     }
