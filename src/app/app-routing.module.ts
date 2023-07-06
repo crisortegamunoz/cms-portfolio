@@ -73,41 +73,8 @@ const routes: Routes = [
         path: 'apps',
         loadChildren: () =>
           import('./apps/apps.module').then((m) => m.AppsModule),
-      },
-      {
-        path: 'ui',
-        loadChildren: () => import('./ui/ui.module').then((m) => m.UiModule),
-      },
-      {
-        path: 'timeline',
-        loadChildren: () =>
-          import('./timeline/timeline.module').then((m) => m.TimelineModule),
-      },
-      {
-        path: 'icons',
-        loadChildren: () =>
-          import('./icons/icons.module').then((m) => m.IconsModule),
-      },
-      {
-        path: 'extra-pages',
-        loadChildren: () =>
-          import('./extra-pages/extra-pages.module').then(
-            (m) => m.ExtraPagesModule
-          ),
-      },
-      {
-        path: 'maps',
-        loadChildren: () =>
-          import('./maps/maps.module').then((m) => m.MapsModule),
-      },
-      {
-        path: 'multilevel',
-        loadChildren: () =>
-          import('./multilevel/multilevel.module').then(
-            (m) => m.MultilevelModule
-          ),
-      },
-    ],
+      }
+    ]
   },
   {
     path: 'authentication',
