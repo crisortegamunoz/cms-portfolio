@@ -31,24 +31,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Components"
-    },
-    "FORMS": {
-      "TEXT": "Forms",
-      "LIST": {
-        "CONTROLS": "Form Controls",
-        "ADVANCE": "Advance Control",
-        "EXAMPLE": "Form Examples",
-        "VALIDATION": "Form Validation",
-        "WIZARD": "Wizard",
-        "EDITORS": "Editors"
-      }
-    },
-    "TABLES": {
-      "TEXT": "Tables",
-      "LIST": {
-        "BASIC": "Basic Tables",
-        "MATERIAL": "Material Tables"
-      }
     }
   }
 }

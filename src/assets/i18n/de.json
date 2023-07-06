@@ -31,24 +31,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Komponenten"
-    },
-    "FORMS": {
-      "TEXT": "Formen",
-      "LIST": {
-        "CONTROLS": "Form Controls",
-        "ADVANCE": "Advance Control",
-        "EXAMPLE": "Vorabkontrolle",
-        "VALIDATION": "Formularvalidierung",
-        "WIZARD": "Magier",
-        "EDITORS": "Redakteurinnen"
-      }
-    },
-    "TABLES": {
-      "TEXT": "Tabellen",
-      "LIST": {
-        "BASIC": "Tablas básicas",
-        "MATERIAL": "Materialtabellen"
-      }
     }
   }
 }

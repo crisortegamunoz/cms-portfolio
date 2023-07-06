@@ -9,10 +9,6 @@ import { ContactGridComponent } from './contact-grid/contact-grid.component';
 import { SupportComponent } from './support/support.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import {
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { SharedModule } from '@shared';
 import { ComponentsModule } from '@shared/components/components.module';
 
@@ -30,10 +26,8 @@ import { ComponentsModule } from '@shared/components/components.module';
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
     ComponentsModule,
-    SharedModule,
+    SharedModule
   ],
 })
 export class AppsModule {}

@@ -79,11 +79,6 @@ const routes: Routes = [
         loadChildren: () => import('./ui/ui.module').then((m) => m.UiModule),
       },
       {
-        path: 'forms',
-        loadChildren: () =>
-          import('./forms/forms.module').then((m) => m.FormModule),
-      },
-      {
         path: 'timeline',
         loadChildren: () =>
           import('./timeline/timeline.module').then((m) => m.TimelineModule),

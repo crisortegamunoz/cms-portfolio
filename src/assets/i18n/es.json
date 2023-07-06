@@ -52,24 +52,6 @@
     },
     "COMPONENTS": {
       "TEXT": "Componentes"
-    },
-    "FORMS": {
-      "TEXT": "Formularios",
-      "LIST": {
-        "CONTROLS": "Controles de formulario",
-        "ADVANCE": "Control avanzado",
-        "EXAMPLE": "Ejemplos de formularios",
-        "VALIDATION": "Validación de formulario",
-        "WIZARD": "Mago",
-        "EDITORS": "Editoras"
-      }
-    },
-    "TABLES": {
-      "TEXT": "Tabellen",
-      "LIST": {
-        "BASIC": "Tablas básicas",
-        "MATERIAL": "Tablas de materiales"
-      }
     }
   }
 }
