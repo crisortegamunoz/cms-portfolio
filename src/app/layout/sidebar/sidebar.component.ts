@@ -35,7 +35,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     public elementRef: ElementRef,
-    private authService: AuthService,
+    //private authService: AuthService,
     private router: Router
   ) {
     this.elementRef.nativeElement.closest('body');
@@ -70,15 +70,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    if (this.authService.currentUserValue) {
-      this.userFullName =
-        this.authService.currentUserValue.firstName +
-        ' ' +
-        this.authService.currentUserValue.lastName;
-      this.userImg = this.authService.currentUserValue.img;
+    //if (this.authService.currentUserValue) {
+      //this.userImg = this.authService.currentUserValue.img;
       this.userType = 'Admin';
       this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
-    }
+    //}
 
     // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     this.initLeftSidebar();
@@ -153,10 +149,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   logout() {
-    this.authService.logout().subscribe((res) => {
+    /*this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
-    });
+    });*/
   }
 }

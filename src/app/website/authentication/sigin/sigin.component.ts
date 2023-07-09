@@ -5,8 +5,11 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '@core';
+import { AuthService } from '@core/service/authentication/auth.service';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { TokenService } from '@core/service/authentication/token.service';
+import { User } from '@core/models/user.model';
+
 
 @Component({
   selector: 'app-sigin',
@@ -25,15 +28,16 @@ constructor(
   private formBuilder: UntypedFormBuilder,
   private route: ActivatedRoute,
   private router: Router,
-  private authService: AuthService
+  private authService: AuthService,
+  private tokeService: TokenService
 ) {
   super();
 }
 
 ngOnInit() {
   this.authForm = this.formBuilder.group({
-    username: ['admin@software.com', Validators.required],
-    password: ['admin@123', Validators.required],
+    username: ['', Validators.required],
+    password: ['', Validators.required],
   });
 }
 get f() {
@@ -48,12 +52,12 @@ onSubmit() {
     return;
   } else {
     this.subs.sink = this.authService
-      .login(this.f['username'].value, this.f['password'].value)
+      .login(this.authForm.getRawValue())
       .subscribe({
         next: (res) => {
           if (res) {
             if (res) {
-              const token = this.authService.currentUserValue.token;
+              const token = this.tokeService.getToken();
               if (token) {
                 this.router.navigate(['/dashboard']);
               }

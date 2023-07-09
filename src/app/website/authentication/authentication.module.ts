@@ -19,7 +19,7 @@ import { SharedModule } from '@shared';
     FormsModule,
     ReactiveFormsModule,
     AuthenticationRoutingModule,
-    SharedModule,
+    SharedModule
   ],
 })
 export class AuthenticationModule {}

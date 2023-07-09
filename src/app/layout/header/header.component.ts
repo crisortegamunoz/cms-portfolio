@@ -45,7 +45,7 @@ export class HeaderComponent
     private renderer: Renderer2,
     public elementRef: ElementRef,
     private configService: ConfigService,
-    private authService: AuthService,
+    //private authService: AuthService,
     private router: Router,
     public languageService: LanguageService
   ) {
@@ -109,7 +109,7 @@ export class HeaderComponent
   ];
   ngOnInit() {
     this.config = this.configService.configData;
-    this.userImg = this.authService.currentUserValue.img;
+    //this.userImg = this.authService.currentUserValue.img;
 
     this.homePage = 'dashboard';
 
@@ -171,10 +171,10 @@ export class HeaderComponent
     }
   }
   logout() {
-    this.subs.sink = this.authService.logout().subscribe((res) => {
+    /*this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
-    });
+    });*/
   }
 }
