@@ -54,8 +54,8 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   getPortfolios() {
-    this.portfolioService.getAll().subscribe((portfolios) => {
-      this.portfolios = portfolios;
+    this.portfolioService.getAll().subscribe((page) => {
+      this.portfolios = page.content;
       this.dataSource = new MatTableDataSource<PortfolioDTO>(this.portfolios);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

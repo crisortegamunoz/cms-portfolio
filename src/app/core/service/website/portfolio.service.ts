@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
+import { Page } from '@core/models/response/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class PortfolioService  extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  getAll(): Observable<PortfolioDTO[]> {
-    return this.httpClient.get<PortfolioDTO[]>(`${this.SERVICE}`);
+  getAll(): Observable<Page<PortfolioDTO>> {
+    return this.httpClient.get<Page<PortfolioDTO>>(`${this.SERVICE}`);
   }
 
   save(certificate: PortfolioDTO): Observable<PortfolioDTO> {

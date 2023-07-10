@@ -55,8 +55,8 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
   }
 
   getCertificates() {
-    this.certificateService.getAll().subscribe((certificates) => {
-      this.certificates = certificates;
+    this.certificateService.getAll().subscribe((page) => {
+      this.certificates = page.content;
       this.dataSource = new MatTableDataSource<CertificateDTO>(this.certificates);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { CertificateDTO } from '@core/models/website/certificate.model';
+import { Page } from '@core/models/response/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class CertificateService extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  getAll(): Observable<CertificateDTO[]> {
-    return this.httpClient.get<CertificateDTO[]>(`${this.SERVICE}/desc`);
+  getAll(): Observable<Page<CertificateDTO>> {
+    return this.httpClient.get<Page<CertificateDTO>>(`${this.SERVICE}`);
   }
 
   save(certificate: CertificateDTO): Observable<CertificateDTO> {
