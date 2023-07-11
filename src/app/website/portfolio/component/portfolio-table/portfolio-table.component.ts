@@ -81,7 +81,7 @@ export class PortfolioTableComponent extends UnsubscribeOnDestroyAdapter impleme
               this.getPortfolios();
           });
         })
-        .catch(error => {
+        .catch(() => {
           SwalConfig.simpleModalError('Error', 'Hubo un error al intentar eliminar los archivos desde Firebase');
         });
       }
