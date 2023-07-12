@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { switchMap } from 'rxjs';
 import { UploadResult } from 'firebase/storage';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Event, Router } from '@angular/router';
 
 import { CategoryDTO } from '@core/models/website/category.model';
 import { CategoryService } from '@core/service/website/category.service';
@@ -13,6 +13,7 @@ import { PortfolioDTO } from '@core/models/website/portfolio.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonFunctions } from '@core/util/common';
 import { PortfolioService } from '@core/service/website/portfolio.service';
+import { MatSelectChange } from '@angular/material/select';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class PortfolioFormComponent implements OnInit {
   portfolioStep3?: FormGroup;
   portfolio: PortfolioDTO;
   maxDate: Date;
+  show: boolean;
   private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
   private PATH = 'images/portfolio';
   constructor(private route: ActivatedRoute,
@@ -42,6 +44,7 @@ export class PortfolioFormComponent implements OnInit {
               private technologyService: TechnologyService,
               private formBuilder: FormBuilder,
               private spinner: NgxSpinnerService) {
+      this.show = false;
       this.loading = true;
       this.title = '';
       this.subtitle = '';
@@ -67,6 +70,11 @@ export class PortfolioFormComponent implements OnInit {
     });
   }
 
+  onCategorySelectionChange(event: MatSelectChange) {
+    const category: CategoryDTO = event.value;
+    this.show = category.name !== 'Profesional' ? true : false;
+  }
+
   create() {
     this.spinner.show();
     const steps = this.validateSteps();
@@ -84,7 +92,7 @@ export class PortfolioFormComponent implements OnInit {
     const img = fileUrl ? fileUrl : this.portfolio.img;
     this.portfolio = this.portfolioStep1?.getRawValue();
     this.portfolio.technologies = this.portfolioStep2?.getRawValue().technologyList;
-    this.portfolio.descriptions = this.portfolioStep3?.getRawValue().descriptionList;
+    this.portfolio.descriptions = this.portfolioStep3?.getRawValue().description;
     this.portfolio.img = img;
     this.portfolioService.save(this.portfolio).subscribe(() => {
       this.spinner.hide();
@@ -124,26 +132,6 @@ export class PortfolioFormComponent implements OnInit {
       SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna tecnología seleccionada');
     } else {
       this.technologyControls.removeAt(index);
-    }
-  }
-
-  get descriptionControls() {
-    return this.portfolioStep3?.get('descriptionList') as FormArray;
-  }
-
-  addDescription() {
-    if (this.descriptionControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.descriptionControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda completar la descripción antes de agregar una nueva');
-    }
-  }
-
-  removeDescription(index: number) {
-    if (this.descriptionControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna descripción');
-    } else {
-      this.descriptionControls.removeAt(index);
     }
   }
 
@@ -194,7 +182,7 @@ export class PortfolioFormComponent implements OnInit {
 
   private loadFormStep3() {
     this.portfolioStep3 = this.formBuilder.group({
-      descriptionList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
+      description: ['', Validators.required]
     });
   }
 

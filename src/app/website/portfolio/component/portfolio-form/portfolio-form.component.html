@@ -25,42 +25,25 @@
                   <ng-template matStepLabel>Completa la información principal</ng-template>
                   <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Nombre Proyecto</mat-label>
-                        <input matInput formControlName="portfolioName" required>
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
-                        <mat-error *ngIf="portfolioStep1?.get('portfolioName')?.hasError('required')">
-                          Nombre del portafolio es requerido
+                      <mat-form-field class="example-full-width " appearance="outline">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select (selectionChange)="onCategorySelectionChange($event)" formControlName="category" required>
+                          <mat-option *ngFor="let category of categories" [value]="category">
+                            {{ category.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="portfolioStep1?.get('category')?.hasError('required')">
+                          Debe seleccionar una categoría
                         </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                       <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Nombre Cliente</mat-label>
-                        <input matInput formControlName="clientName">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>business</mat-icon>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Repositorio</mat-label>
-                        <input matInput formControlName="repository">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>code</mat-icon>
-                        <mat-error *ngIf="portfolioStep1?.get('repository')?.invalid && portfolioStep1?.get('repository')?.touched">
-                          La URL ingresada no es válida.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Demo</mat-label>
-                        <input matInput formControlName="demo">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>airplay</mat-icon>
-                        <mat-error *ngIf="portfolioStep1?.get('demo')?.invalid && portfolioStep1?.get('demo')?.touched">
-                          La URL ingresada no es válida.
-                        </mat-error>
+                        <ngx-mat-file-input #img formControlName="img" valuePlaceholder="Subir imagen de referencia" [accept]="'.png'"></ngx-mat-file-input>
+                        <button mat-icon-button matSuffix *ngIf="!img.empty" (click)="img.clear($event)">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                        <mat-icon matSuffix>folder</mat-icon>
                       </mat-form-field>
                     </div>
                   </div>
@@ -84,25 +67,42 @@
                   </div>
                   <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width " appearance="outline">
-                        <mat-label>Categoría</mat-label>
-                        <mat-select formControlName="category" required>
-                          <mat-option *ngFor="let category of categories" [value]="category">
-                            {{ category.name }}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="portfolioStep1?.get('category')?.hasError('required')">
-                          Debe seleccionar una categoría
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Proyecto</mat-label>
+                        <input matInput formControlName="portfolioName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                        <mat-error *ngIf="portfolioStep1?.get('portfolioName')?.hasError('required')">
+                          Nombre del portafolio es requerido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="show">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Cliente</mat-label>
+                        <input matInput formControlName="clientName">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>business</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="show">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Repositorio</mat-label>
+                        <input matInput formControlName="repository">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>code</mat-icon>
+                        <mat-error *ngIf="portfolioStep1?.get('repository')?.invalid && portfolioStep1?.get('repository')?.touched">
+                          La URL ingresada no es válida.
                         </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                       <mat-form-field class="example-full-width" appearance="outline">
-                        <ngx-mat-file-input #img formControlName="img" valuePlaceholder="Subir imagen de referencia" [accept]="'.png'"></ngx-mat-file-input>
-                        <button mat-icon-button matSuffix *ngIf="!img.empty" (click)="img.clear($event)">
-                          <mat-icon>clear</mat-icon>
-                        </button>
-                        <mat-icon matSuffix>folder</mat-icon>
+                        <mat-label>Demo</mat-label>
+                        <input matInput formControlName="demo">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>airplay</mat-icon>
+                        <mat-error *ngIf="portfolioStep1?.get('demo')?.invalid && portfolioStep1?.get('demo')?.touched">
+                          La URL ingresada no es válida.
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -138,24 +138,18 @@
               </mat-step>
               <mat-step [stepControl]="portfolioStep3!">
                 <form [formGroup]="portfolioStep3!">
-                  <ng-template matStepLabel>Ingresa las descripciones</ng-template>
-                  <div class="row" formArrayName="descriptionList">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let descControl of descriptionControls.controls; let i = index">
-                      <div class="flex-container">
+                  <ng-template matStepLabel>Describe el proyecto</ng-template>
+                  <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                         <mat-form-field class="example-full-width" appearance="outline">
                           <mat-label>Descripción</mat-label>
-                          <textarea matInput [formControlName]="i" required></textarea>
-                          <mat-error *ngIf="portfolioStep3?.get('descriptionList')?.invalid && portfolioStep3?.get('descriptionList')?.hasError('required')">
+                          <textarea matInput required></textarea>
+                          <mat-error *ngIf="portfolioStep3?.get('description')?.invalid && portfolioStep3?.get('description')?.hasError('required')">
                             Debe completar la descripción
                           </mat-error>
                         </mat-form-field>
-                        <button mat-icon-button color="warn" (click)="removeDescription(i)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </div>
                     </div>
                   </div>
-                  <button mat-raised-button color="primary" (click)="addDescription()">Agregar descripción</button>
                 </form>
               </mat-step>
               <mat-step>
