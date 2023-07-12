@@ -6,7 +6,7 @@ export interface PortfolioDTO {
   portfolioName: string;
   clientName: string;
   img: string;
-  descriptions: string[];
+  description: string;
   repository: string;
   demo: string;
   startDate: Date;

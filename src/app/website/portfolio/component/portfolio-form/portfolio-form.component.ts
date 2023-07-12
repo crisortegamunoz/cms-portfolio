@@ -14,6 +14,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonFunctions } from '@core/util/common';
 import { PortfolioService } from '@core/service/website/portfolio.service';
 import { MatSelectChange } from '@angular/material/select';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class PortfolioFormComponent implements OnInit {
   subtitle: string;
   categories: CategoryDTO[];
   technologies: TechnologyDTO[];
+  technologiesAdded: TechnologyDTO[];
   isLinear = false;
   portfolioStep1?: FormGroup;
   portfolioStep2?: FormGroup;
@@ -50,6 +52,7 @@ export class PortfolioFormComponent implements OnInit {
       this.subtitle = '';
       this.categories = [];
       this.technologies = [];
+      this.technologiesAdded = [];
       this.portfolio = {} as PortfolioDTO;
       this.maxDate = new Date();
   }
@@ -70,9 +73,31 @@ export class PortfolioFormComponent implements OnInit {
     });
   }
 
+  get technologyControls() {
+    return this.portfolioStep2?.get('technologyList') as FormArray;
+  }
+
   onCategorySelectionChange(event: MatSelectChange) {
     const category: CategoryDTO = event.value;
     this.show = category.name !== 'Profesional' ? true : false;
+  }
+
+  drop(event: CdkDragDrop<TechnologyDTO[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+    this.refreshStep2Form();
   }
 
   create() {
@@ -88,11 +113,22 @@ export class PortfolioFormComponent implements OnInit {
     this.uploadFiles([this.portfolioStep1?.getRawValue().img.files[0]]);
   }
 
+  private refreshStep2Form(): void {
+    this.technologyControls.clear();
+    if (this.technologiesAdded.length > 0) {
+      this.technologiesAdded.forEach(technology => {
+        this.technologyControls.push(this.formBuilder.group(technology));
+      });
+    } else {
+      SwalConfig.simpleModalWarning('Advertencia', 'Debes tener al menos una tecnología agregada asociada al proyecto');
+    }
+  }
+
   private savePortfolio(fileUrl: string): void {
     const img = fileUrl ? fileUrl : this.portfolio.img;
     this.portfolio = this.portfolioStep1?.getRawValue();
     this.portfolio.technologies = this.portfolioStep2?.getRawValue().technologyList;
-    this.portfolio.descriptions = this.portfolioStep3?.getRawValue().description;
+    this.portfolio.description = this.portfolioStep3?.getRawValue().description;
     this.portfolio.img = img;
     this.portfolioService.save(this.portfolio).subscribe(() => {
       this.spinner.hide();
@@ -113,26 +149,6 @@ export class PortfolioFormComponent implements OnInit {
       .catch((error: any) => {
         console.error('Error al subir las imágenes:', error);
       });
-  }
-
-  get technologyControls() {
-    return this.portfolioStep2?.get('technologyList') as FormArray;
-  }
-
-  addTechnology() {
-    if (this.technologyControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.technologyControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda seleccionar una tecnología antes de agregar una nueva');
-    }
-  }
-
-  removeTechnology(index: number) {
-    if (this.technologyControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna tecnología seleccionada');
-    } else {
-      this.technologyControls.removeAt(index);
-    }
   }
 
   private loadFormProccess(id: string | null): void {
@@ -176,7 +192,7 @@ export class PortfolioFormComponent implements OnInit {
 
   private loadFormStep2() {
     this.portfolioStep2 = this.formBuilder.group({
-      technologyList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
+      technologyList: this.formBuilder.array([], Validators.required)
     });
   }
 
