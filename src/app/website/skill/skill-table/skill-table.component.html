@@ -84,10 +84,10 @@
                     <span class="mobile-label">Mostrar:</span>{{row.show ? 'Sí' : 'No'}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="technologyName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-7">Tecnología
+                  <mat-header-cell *matHeaderCellDef mat-sort-header class="table-img tbl-col-width-per-15">Tecnología
                   </mat-header-cell>
-                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-7">
-                    <span class="mobile-label">Tecnología:</span>{{row.technology.name}}</mat-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="table-img tbl-col-width-per-15">
+                    <span class="mobile-label">Tecnología:</span>{{row.technology ? row.technology.name : ''}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="categoryName">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Categoría
