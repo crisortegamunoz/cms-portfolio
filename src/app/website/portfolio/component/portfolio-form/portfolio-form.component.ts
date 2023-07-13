@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { switchMap } from 'rxjs';
 import { UploadResult } from 'firebase/storage';
-import { ActivatedRoute, Event, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CategoryDTO } from '@core/models/website/category.model';
 import { CategoryService } from '@core/service/website/category.service';
-import { TechnologyService } from '@core/service/website/technology.service';
 import { TechnologyDTO } from '@core/models/website/technology.model';
 import { SwalConfig } from '@core/swal/config';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
@@ -14,7 +13,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonFunctions } from '@core/util/common';
 import { PortfolioService } from '@core/service/website/portfolio.service';
 import { MatSelectChange } from '@angular/material/select';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -28,8 +26,6 @@ export class PortfolioFormComponent implements OnInit {
   title: string;
   subtitle: string;
   categories: CategoryDTO[];
-  technologies: TechnologyDTO[];
-  technologiesAdded: TechnologyDTO[];
   isLinear = false;
   portfolioStep1?: FormGroup;
   portfolioStep2?: FormGroup;
@@ -43,7 +39,6 @@ export class PortfolioFormComponent implements OnInit {
               private router: Router,
               private portfolioService: PortfolioService,
               private categoryService: CategoryService,
-              private technologyService: TechnologyService,
               private formBuilder: FormBuilder,
               private spinner: NgxSpinnerService) {
       this.show = false;
@@ -51,25 +46,19 @@ export class PortfolioFormComponent implements OnInit {
       this.title = '';
       this.subtitle = '';
       this.categories = [];
-      this.technologies = [];
-      this.technologiesAdded = [];
       this.portfolio = {} as PortfolioDTO;
       this.maxDate = new Date();
   }
 
   ngOnInit() {
     this.spinner.show();
-    this.categoryService.getBySection('PORTFOLIO').pipe(
-      switchMap(categories => {
-        this.categories = categories;
-        return this.technologyService.getAll();
-      }),
-      switchMap(technologies => {
-        this.technologies = technologies;
-        return this.route.paramMap;
+    this.route.paramMap.pipe(
+      switchMap(paramMap => {
+        this.loadFormProccess(paramMap.get('id'));
+        return this.categoryService.getBySection('PORTFOLIO');
       })
-    ).subscribe(paramMap => {
-      this.loadFormProccess(paramMap.get('id'));
+    ).subscribe(categories => {
+      this.categories = categories;
     });
   }
 
@@ -80,24 +69,6 @@ export class PortfolioFormComponent implements OnInit {
   onCategorySelectionChange(event: MatSelectChange) {
     const category: CategoryDTO = event.value;
     this.show = category.name !== 'Profesional' ? true : false;
-  }
-
-  drop(event: CdkDragDrop<TechnologyDTO[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-    this.refreshStep2Form();
   }
 
   create() {
@@ -113,10 +84,10 @@ export class PortfolioFormComponent implements OnInit {
     this.uploadFiles([this.portfolioStep1?.getRawValue().img.files[0]]);
   }
 
-  private refreshStep2Form(): void {
+  onAddTechnologies(technologies: TechnologyDTO[]): void {
     this.technologyControls.clear();
-    if (this.technologiesAdded.length > 0) {
-      this.technologiesAdded.forEach(technology => {
+    if (technologies.length > 0) {
+      technologies.forEach(technology => {
         this.technologyControls.push(this.formBuilder.group(technology));
       });
     } else {

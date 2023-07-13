@@ -115,25 +115,7 @@
               <mat-step [stepControl]="portfolioStep2!">
                 <form [formGroup]="portfolioStep2!">
                   <ng-template matStepLabel>Selecciona las tecnologías</ng-template>
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                      <div class="example-container2">
-                        <h2>Tecnologías para agregar</h2>
-                        <div cdkDropList #toAddList="cdkDropList" [cdkDropListData]="technologies"
-                          [cdkDropListConnectedTo]="[AddedList]" class="example-list" (cdkDropListDropped)="drop($event)">
-                          <div class="example-box-small" *ngFor="let technology of technologies" cdkDrag>{{ technology.name }} {{ technology.version }}</div>
-                        </div>
-                      </div>
-
-                      <div class="example-container2">
-                        <h2>Asociadas al proyecto</h2>
-                        <div cdkDropList #AddedList="cdkDropList" [cdkDropListData]="technologiesAdded"
-                          [cdkDropListConnectedTo]="[toAddList]" class="example-list" (cdkDropListDropped)="drop($event)">
-                          <div class="example-box-small" *ngFor="let technology of technologiesAdded" cdkDrag>{{ technology.name }} {{ technology.version }}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <app-add-technology [technologiesRelated]="portfolio.technologies" (addTechnologies)="onAddTechnologies($event)"></app-add-technology>
                 </form>
               </mat-step>
               <mat-step [stepControl]="portfolioStep3!">
