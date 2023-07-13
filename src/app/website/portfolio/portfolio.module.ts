@@ -9,6 +9,7 @@ import { PortfolioRoutingModule } from './portfolio-routing.module';
 import { PortfolioTableComponent } from './component/portfolio-table/portfolio-table.component';
 import { PortfolioFormComponent } from './component/portfolio-form/portfolio-form.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ReactiveFormsModule,
     ComponentsModule,
     SharedModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    DragDropModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
