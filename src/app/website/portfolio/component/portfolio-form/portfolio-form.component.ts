@@ -6,13 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CategoryDTO } from '@core/models/website/category.model';
 import { CategoryService } from '@core/service/website/category.service';
-import { TechnologyService } from '@core/service/website/technology.service';
 import { TechnologyDTO } from '@core/models/website/technology.model';
 import { SwalConfig } from '@core/swal/config';
 import { PortfolioDTO } from '@core/models/website/portfolio.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonFunctions } from '@core/util/common';
 import { PortfolioService } from '@core/service/website/portfolio.service';
+import { MatSelectChange } from '@angular/material/select';
 
 
 @Component({
@@ -26,45 +26,49 @@ export class PortfolioFormComponent implements OnInit {
   title: string;
   subtitle: string;
   categories: CategoryDTO[];
-  technologies: TechnologyDTO[];
   isLinear = false;
   portfolioStep1?: FormGroup;
   portfolioStep2?: FormGroup;
   portfolioStep3?: FormGroup;
   portfolio: PortfolioDTO;
   maxDate: Date;
+  show: boolean;
   private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
   private PATH = 'images/portfolio';
   constructor(private route: ActivatedRoute,
               private router: Router,
               private portfolioService: PortfolioService,
               private categoryService: CategoryService,
-              private technologyService: TechnologyService,
               private formBuilder: FormBuilder,
               private spinner: NgxSpinnerService) {
+      this.show = false;
       this.loading = true;
       this.title = '';
       this.subtitle = '';
       this.categories = [];
-      this.technologies = [];
       this.portfolio = {} as PortfolioDTO;
       this.maxDate = new Date();
   }
 
   ngOnInit() {
     this.spinner.show();
-    this.categoryService.getBySection('PORTFOLIO').pipe(
-      switchMap(categories => {
-        this.categories = categories;
-        return this.technologyService.getAll();
-      }),
-      switchMap(technologies => {
-        this.technologies = technologies;
-        return this.route.paramMap;
+    this.route.paramMap.pipe(
+      switchMap(paramMap => {
+        this.loadFormProccess(paramMap.get('id'));
+        return this.categoryService.getBySection('PORTFOLIO');
       })
-    ).subscribe(paramMap => {
-      this.loadFormProccess(paramMap.get('id'));
+    ).subscribe(categories => {
+      this.categories = categories;
     });
+  }
+
+  get technologyControls() {
+    return this.portfolioStep2?.get('technologyList') as FormArray;
+  }
+
+  onCategorySelectionChange(event: MatSelectChange) {
+    const category: CategoryDTO = event.value;
+    this.show = category.name !== 'Profesional' ? true : false;
   }
 
   create() {
@@ -80,11 +84,22 @@ export class PortfolioFormComponent implements OnInit {
     this.uploadFiles([this.portfolioStep1?.getRawValue().img.files[0]]);
   }
 
+  onAddTechnologies(technologies: TechnologyDTO[]): void {
+    this.technologyControls.clear();
+    if (technologies.length > 0) {
+      technologies.forEach(technology => {
+        this.technologyControls.push(this.formBuilder.group(technology));
+      });
+    } else {
+      SwalConfig.simpleModalWarning('Advertencia', 'Debes tener al menos una tecnología agregada asociada al proyecto');
+    }
+  }
+
   private savePortfolio(fileUrl: string): void {
     const img = fileUrl ? fileUrl : this.portfolio.img;
     this.portfolio = this.portfolioStep1?.getRawValue();
     this.portfolio.technologies = this.portfolioStep2?.getRawValue().technologyList;
-    this.portfolio.descriptions = this.portfolioStep3?.getRawValue().descriptionList;
+    this.portfolio.description = this.portfolioStep3?.getRawValue().description;
     this.portfolio.img = img;
     this.portfolioService.save(this.portfolio).subscribe(() => {
       this.spinner.hide();
@@ -105,46 +120,6 @@ export class PortfolioFormComponent implements OnInit {
       .catch((error: any) => {
         console.error('Error al subir las imágenes:', error);
       });
-  }
-
-  get technologyControls() {
-    return this.portfolioStep2?.get('technologyList') as FormArray;
-  }
-
-  addTechnology() {
-    if (this.technologyControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.technologyControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda seleccionar una tecnología antes de agregar una nueva');
-    }
-  }
-
-  removeTechnology(index: number) {
-    if (this.technologyControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna tecnología seleccionada');
-    } else {
-      this.technologyControls.removeAt(index);
-    }
-  }
-
-  get descriptionControls() {
-    return this.portfolioStep3?.get('descriptionList') as FormArray;
-  }
-
-  addDescription() {
-    if (this.descriptionControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.descriptionControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda completar la descripción antes de agregar una nueva');
-    }
-  }
-
-  removeDescription(index: number) {
-    if (this.descriptionControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna descripción');
-    } else {
-      this.descriptionControls.removeAt(index);
-    }
   }
 
   private loadFormProccess(id: string | null): void {
@@ -188,13 +163,13 @@ export class PortfolioFormComponent implements OnInit {
 
   private loadFormStep2() {
     this.portfolioStep2 = this.formBuilder.group({
-      technologyList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
+      technologyList: this.formBuilder.array([], Validators.required)
     });
   }
 
   private loadFormStep3() {
     this.portfolioStep3 = this.formBuilder.group({
-      descriptionList: this.formBuilder.array([this.formBuilder.control('')], Validators.required)
+      description: ['', Validators.required]
     });
   }
 
