@@ -11,6 +11,7 @@ import { SwalConfig } from '@core/swal/config';
 import { ExperienceDTO } from '@core/models/website/experience.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ExperienceService } from '@core/service/website/experience.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-experience-form',
@@ -30,8 +31,9 @@ export class ExperienceFormComponent implements OnInit {
   experienceStep3?: FormGroup;
   experience: ExperienceDTO;
   maxDate: Date;
-  private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
-  private PATH = 'images/portfolio';
+  show: string;
+  entityTextLabel: string;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private experienceService: ExperienceService,
@@ -46,6 +48,8 @@ export class ExperienceFormComponent implements OnInit {
       this.technologies = [];
       this.experience = {} as ExperienceDTO;
       this.maxDate = new Date();
+      this.show = '';
+      this.entityTextLabel = '';
   }
 
   ngOnInit() {
@@ -62,6 +66,28 @@ export class ExperienceFormComponent implements OnInit {
     ).subscribe(paramMap => {
       this.loadFormProccess(paramMap.get('id'));
     });
+  }
+
+  onCategorySelectionChange(event: MatSelectChange) {
+    const category: CategoryDTO = event.value;
+
+    if (category.name === 'Trabajo') {
+      this.entityTextLabel = 'Nombre Empresa';
+    } else {
+      this.entityTextLabel = 'Nombre Entidad Educacional';
+    }
+    this.show = category.name
+  }
+
+  onAddTechnologies(technologies: TechnologyDTO[]): void {
+    this.technologyControls.clear();
+    if (technologies.length > 0) {
+      technologies.forEach(technology => {
+        this.technologyControls.push(this.formBuilder.group(technology));
+      });
+    } else {
+      SwalConfig.simpleModalWarning('Advertencia', 'Debes tener al menos una tecnología agregada asociada al proyecto');
+    }
   }
 
   create() {
@@ -89,20 +115,6 @@ export class ExperienceFormComponent implements OnInit {
 
   get technologyControls() {
     return this.experienceStep2?.get('technologyList') as FormArray;
-  }
-
-  addTechnology() {
-    if (this.technologyControls.controls.length === 0) {
-      this.technologyControls.push(this.formBuilder.control(null));
-    } else if (this.technologyControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.technologyControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda seleccionar una tecnología antes de agregar una nueva');
-    }
-  }
-
-  removeTechnology(index: number) {
-    this.technologyControls.removeAt(index);
   }
 
   get descriptionControls() {
@@ -155,7 +167,7 @@ export class ExperienceFormComponent implements OnInit {
       roleName: [''],
       roleDescription: [''],
       entityName: ['', Validators.required],
-      location: ['', Validators.required],
+      entityLocation: ['', Validators.required],
       entityDescription: [''],
       periodStart: ['', Validators.required],
       periodEnd: [''],
