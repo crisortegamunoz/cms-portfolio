@@ -14,6 +14,31 @@
   <div mat-dialog-content>
     <form class="register-form m-4" [formGroup]="skillForm" (ngSubmit)="submit">
       <div class="row">
+        <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+          <mat-form-field class="example-full-width " appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Categoría</mat-label>
+            <mat-select (selectionChange)="onCategorySelectionChange($event)" formControlName="category" required>
+              <mat-option *ngFor="let category of categories" [value]="category">
+                {{ category.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="skillForm.get('category')?.hasError('required')">
+              Debe seleccionar una categoría
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+          <mat-form-field class="example-full-width " appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
+            <mat-label>Tecnología</mat-label>
+            <mat-select formControlName="technology">
+              <mat-option *ngFor="let technology of technologies" [value]="technology">
+                {{ technology.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
             <mat-label>Nombre</mat-label>
@@ -21,7 +46,7 @@
             <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>drive_file_rename_outline</mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+        <div *ngIf="show" class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
             <mat-label>Porcentaje</mat-label>
             <input matInput formControlName="percentage" type="number">
@@ -29,7 +54,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="show" class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
             <mat-label>Clase CSS</mat-label>
@@ -42,31 +67,6 @@
             <mat-label>Estilo CSS</mat-label>
             <input matInput formControlName="cssStyle" required>
             <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>auto_fix_high</mat-icon>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <mat-form-field class="example-full-width " appearance="outline" subscriptSizing="dynamic" hideRequiredMarker="true">
-            <mat-label>Tecnología</mat-label>
-            <mat-select formControlName="technology" required>
-              <mat-option *ngFor="let technology of technologies" [value]="technology">
-                {{ technology.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <mat-form-field class="example-full-width " appearance="outline" subscriptSizing="dynamic">
-            <mat-label>Categoría</mat-label>
-            <mat-select formControlName="category" required>
-              <mat-option *ngFor="let category of categories" [value]="category">
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="skillForm.get('category')?.hasError('required')">
-              Debe seleccionar una categoría
-            </mat-error>
           </mat-form-field>
         </div>
       </div>

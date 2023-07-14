@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { CategoryDTO } from '@core/models/website/category.model';
 
 import { DialogData } from '@core/models/website/dialog.model';
@@ -25,6 +26,7 @@ export class SkillFormComponent implements OnInit {
   technologies: TechnologyDTO[];
   categories: CategoryDTO[];
   formControl = new UntypedFormControl('', [Validators.required,]);
+  show: boolean;
 
   constructor(public dialogRef: MatDialogRef<SkillFormComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData<SkillDTO>,
@@ -36,6 +38,7 @@ export class SkillFormComponent implements OnInit {
     this.technologies = [];
     this.categories = [];
     this.action = data.action;
+    this.show = false;
     if (this.action === 'edit') {
       this.skill = { ... data.object };
       this.dialogTitle = `${this.skill.name} ${this.skill.category.name}`;
@@ -47,7 +50,12 @@ export class SkillFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadLists().subscribe();
+    this.loadCategoryAndTechnology().subscribe();
+  }
+
+  onCategorySelectionChange(event: MatSelectChange) {
+    const category: CategoryDTO = event.value;
+    this.show = category.name === 'Habilidad' ? true : false;
   }
 
   getErrorMessage() {
@@ -83,11 +91,11 @@ export class SkillFormComponent implements OnInit {
     });
   }
 
-  private loadLists(): Observable<any>  {
+  private loadCategoryAndTechnology(): Observable<any>  {
     return this.technologyService.getAll().pipe(
       switchMap((technologies: TechnologyDTO[]) => {
         this.technologies = technologies;
-        return this.categoryService.getAll();
+        return this.categoryService.getBySection('KNOWLEDGE');
       })
     ).pipe(
       switchMap((categories: CategoryDTO[]) => {
