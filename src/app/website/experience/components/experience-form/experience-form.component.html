@@ -25,42 +25,16 @@
                   <ng-template matStepLabel>Completa la información principal</ng-template>
                   <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Nombre Rol</mat-label>
-                        <input matInput formControlName="roleName">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Descripción del Rol</mat-label>
-                        <textarea matInput formControlName="roleDescription"></textarea>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Nombre Entidad</mat-label>
-                        <input matInput formControlName="entityName" required>
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Ubicación</mat-label>
-                        <input matInput formControlName="location" required>
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Descripción del Entidad</mat-label>
-                        <textarea matInput formControlName="entityDescription"></textarea>
+                      <mat-form-field class="example-full-width " appearance="outline">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select (selectionChange)="onCategorySelectionChange($event)"formControlName="category" required>
+                          <mat-option *ngFor="let category of categories" [value]="category">
+                            {{ category.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="experienceStep1?.get('category')?.hasError('required')">
+                          Debe seleccionar una categoría
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -82,18 +56,44 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <div class="row">
+                  <div *ngIf="show === 'Trabajo'" class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                      <mat-form-field class="example-full-width " appearance="outline">
-                        <mat-label>Categoría</mat-label>
-                        <mat-select formControlName="category" required>
-                          <mat-option *ngFor="let category of categories" [value]="category">
-                            {{ category.name }}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="experienceStep1?.get('category')?.hasError('required')">
-                          Debe seleccionar una categoría
-                        </mat-error>
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre Rol</mat-label>
+                        <input matInput formControlName="roleName">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div *ngIf="show === 'Trabajo'" class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Descripción del Rol</mat-label>
+                        <textarea matInput formControlName="roleDescription"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div *ngIf="show !== ''" class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label> {{ entityTextLabel }}</mat-label>
+                        <input matInput formControlName="entityName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Ubicación</mat-label>
+                        <input matInput formControlName="entityLocation" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div *ngIf="show !== ''" class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput formControlName="entityDescription"></textarea>
                       </mat-form-field>
                     </div>
                   </div>
@@ -106,25 +106,7 @@
               <mat-step [stepControl]="experienceStep2!">
                 <form [formGroup]="experienceStep2!">
                   <ng-template matStepLabel>Selecciona las tecnologías</ng-template>
-                  <div class="row" formArrayName="technologyList">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let techControl of technologyControls.controls; let i = index">
-                      <div class="flex-container">
-                        <mat-form-field class="example-full-width" appearance="outline">
-                          <mat-label>Seleccione una Tecnología</mat-label>
-                          <mat-select [formControlName]="i">
-                            <mat-option *ngFor="let tech of technologies" [value]="tech">{{ tech.name }}  {{ tech.version ? tech.version : '' }}</mat-option>
-                          </mat-select>
-                          <mat-error *ngIf="experienceStep2?.get('technologyList')?.invalid && experienceStep2?.get('technologyList')?.hasError('required')">
-                            La tecnología es obligatoria
-                          </mat-error>
-                        </mat-form-field>
-                        <button mat-icon-button color="warn" (click)="removeTechnology(i)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <button mat-raised-button color="primary" (click)="addTechnology()">Agregar Tecnología</button>
+                  <app-add-technology [technologiesRelated]="experience.technologies" (addTechnologies)="onAddTechnologies($event)"></app-add-technology>
                 </form>
               </mat-step>
               <mat-step [stepControl]="experienceStep3!">
