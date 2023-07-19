@@ -29,6 +29,7 @@ export class ExperienceFormComponent implements OnInit {
   experienceStep1?: FormGroup;
   experienceStep2?: FormGroup;
   experienceStep3?: FormGroup;
+  experienceStep4?: FormGroup;
   experience: ExperienceDTO;
   maxDate: Date;
   show: string;
@@ -68,9 +69,20 @@ export class ExperienceFormComponent implements OnInit {
     });
   }
 
+  get technologyControls() {
+    return this.experienceStep2?.get('technologyList') as FormArray;
+  }
+
+  get descriptionControls() {
+    return this.experienceStep3?.get('descriptionList') as FormArray;
+  }
+
+  get accomplishmentControls() {
+    return this.experienceStep4?.get('accomplishmentList') as FormArray;
+  }
+
   onCategorySelectionChange(event: MatSelectChange) {
     const category: CategoryDTO = event.value;
-
     if (category.name === 'Trabajo') {
       this.entityTextLabel = 'Nombre Empresa';
     } else {
@@ -86,7 +98,27 @@ export class ExperienceFormComponent implements OnInit {
         this.technologyControls.push(this.formBuilder.group(technology));
       });
     } else {
-      SwalConfig.simpleModalWarning('Advertencia', 'Debes tener al menos una tecnología agregada asociada al proyecto');
+      this.show === 'Trabajo' ?
+        SwalConfig.simpleModalError('Error', 'Debes asociar al menos una tecnología a tu experiencia laboral')
+          :  SwalConfig.simpleModalWarning('Advertencia', 'Dejarás sin tecnologías tu formación academica');
+    }
+  }
+
+  add(form: FormArray, entityMessage: string) {
+    if (form.controls.length === 0) {
+      form.push(this.formBuilder.control(null));
+    } else if (form.controls.some(control => control.value !== null && control.value !== '')) {
+      form.push(this.formBuilder.control(null));
+    } else {
+      SwalConfig.simpleModalWarning('Oops!', `Recuerda completar ${entityMessage} antes de agregar una nueva`);
+    }
+  }
+
+  remove(index: number, form: FormArray, entityMessage: string, mandatory: boolean) {
+    if (mandatory && form.controls.length === 1) {
+      SwalConfig.simpleModalWarning('Oops!', `Al menos debe haber ${entityMessage}.`);
+    } else {
+      form.removeAt(index);
     }
   }
 
@@ -107,34 +139,11 @@ export class ExperienceFormComponent implements OnInit {
     this.experience = this.experienceStep1?.getRawValue();
     this.experience.technologies = this.experienceStep2?.getRawValue().technologyList;
     this.experience.responsibilities = this.experienceStep3?.getRawValue().descriptionList;
+    this.experience.accomplishments =  this.experienceStep4?.getRawValue().accomplishmentList;
     this.experienceService.save(this.experience).subscribe(() => {
       this.spinner.hide();
       this.router.navigate(['experience']);
     });
-  }
-
-  get technologyControls() {
-    return this.experienceStep2?.get('technologyList') as FormArray;
-  }
-
-  get descriptionControls() {
-    return this.experienceStep3?.get('descriptionList') as FormArray;
-  }
-
-  addDescription() {
-    if (this.descriptionControls.controls.some(control => control.value !== null && control.value !== '')) {
-      this.descriptionControls.push(this.formBuilder.control(null));
-    } else {
-      SwalConfig.simpleModalWarning('Oops!', 'Recuerda completar la responsabilidad antes de agregar una nueva');
-    }
-  }
-
-  removeDescription(index: number) {
-    if (this.descriptionControls.controls.length === 1) {
-      SwalConfig.simpleModalWarning('Oops!', 'Al menos debe haber alguna responsabilidad');
-    } else {
-      this.descriptionControls.removeAt(index);
-    }
   }
 
   private loadFormProccess(id: string | null): void {
@@ -151,6 +160,7 @@ export class ExperienceFormComponent implements OnInit {
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
+    this.loadFormStep4();
     this.showComponent();
   }
 
@@ -159,6 +169,7 @@ export class ExperienceFormComponent implements OnInit {
     this.loadFormStep1();
     this.loadFormStep2();
     this.loadFormStep3();
+    this.loadFormStep4();
     this.showComponent();
   }
 
@@ -187,11 +198,18 @@ export class ExperienceFormComponent implements OnInit {
     });
   }
 
+  private loadFormStep4() {
+    this.experienceStep4 = this.formBuilder.group({
+      accomplishmentList: this.formBuilder.array([], Validators.required)
+    });
+  }
+
   private validateSteps(): number[] {
     const steps = [
       { step: 1, valid: this.experienceStep1?.valid},
       { step: 2, valid: this.experienceStep2?.valid},
-      { step: 3, valid: this.experienceStep3?.valid}
+      { step: 3, valid: this.experienceStep3?.valid},
+      { step: 4, valid: this.accomplishmentControls.controls.length > 0 ? this.experienceStep4?.valid : true}
     ];
     return steps.reduce((array: number[], { step, valid }) => {
       if (!valid) {
