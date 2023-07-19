@@ -111,24 +111,47 @@
               </mat-step>
               <mat-step [stepControl]="experienceStep3!">
                 <form [formGroup]="experienceStep3!">
-                  <ng-template matStepLabel>Ingresa las responsabilidades</ng-template>
+                  <ng-template matStepLabel>Ingresa tus responsabilidades</ng-template>
                   <div class="row" formArrayName="descriptionList">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let descControl of descriptionControls.controls; let i = index">
                       <div class="flex-container">
                         <mat-form-field class="example-full-width" appearance="outline">
                           <mat-label>Responsabilidad</mat-label>
-                          <textarea matInput [formControlName]="i" required></textarea>
+                          <input matInput [formControlName]="i" required>
                           <mat-error *ngIf="experienceStep3?.get('descriptionList')?.invalid && experienceStep3?.get('descriptionList')?.hasError('required')">
-                            Debe completar la responsabilidad que tuvo
+                            Debe completar la responsabilidad agregada
                           </mat-error>
                         </mat-form-field>
-                        <button mat-icon-button color="warn" (click)="removeDescription(i)">
+                        <button mat-icon-button color="warn" (click)="remove(i, descriptionControls, 'una responsabilidad', true)">
                           <mat-icon>delete</mat-icon>
                         </button>
                       </div>
                     </div>
                   </div>
-                  <button mat-raised-button color="primary" (click)="addDescription()">Agregar descripción</button>
+                  <button mat-raised-button color="primary" (click)="add(descriptionControls, 'la responsabilidad')">Agregar</button>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="experienceStep4!">
+                <form [formGroup]="experienceStep4!">
+                  <ng-template matStepLabel>Ingresa tus logros.</ng-template>
+                  <p>Recurda que este paso es opcional. Aún así, si agregas un logro tendrás que completar la información del campo, para evitar la validación basta con dejar el formulario sin logros.</p>
+                  <div class="row" formArrayName="accomplishmentList">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2" *ngFor="let accomControl of accomplishmentControls.controls; let i = index">
+                      <div class="flex-container">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Logro</mat-label>
+                          <input matInput [formControlName]="i" required>
+                          <mat-error *ngIf="experienceStep4?.get('accomplishmentList')?.invalid && experienceStep4?.get('accomplishmentList')?.hasError('required')">
+                            Debe completar el logro agregado
+                          </mat-error>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" (click)="remove(i, accomplishmentControls, '', false)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <button mat-raised-button color="primary" (click)="add(accomplishmentControls, 'el logro')">Agregar</button>
                 </form>
               </mat-step>
               <mat-step>
