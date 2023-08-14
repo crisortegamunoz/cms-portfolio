@@ -26,7 +26,6 @@ error = '';
 hide = true;
 constructor(
   private formBuilder: UntypedFormBuilder,
-  private route: ActivatedRoute,
   private router: Router,
   private authService: AuthService,
   private tokeService: TokenService
@@ -48,7 +47,6 @@ onSubmit() {
   this.loading = true;
   this.error = '';
   if (this.authForm.invalid) {
-    this.error = 'Username and Password not valid !';
     return;
   } else {
     this.subs.sink = this.authService
