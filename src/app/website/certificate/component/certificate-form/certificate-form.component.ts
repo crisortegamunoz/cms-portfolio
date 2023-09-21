@@ -13,6 +13,7 @@ import { CategoryService } from '@core/service/website/category.service';
 import { CertificateService } from '@core/service/website/certificate.service';
 import { ImageComponent } from '@shared/components/image/image.component';
 import { CommonFunctions } from '@core/util/common';
+import { UserService } from '@core/service/authentication/user.service';
 
 
 @Component({
@@ -38,8 +39,8 @@ export class CertificateFormComponent implements OnInit {
               private fb: UntypedFormBuilder,
               private certificateService: CertificateService,
               private categoryService: CategoryService,
+              private userService: UserService,
               private dialog: MatDialog) {
-    // Set the defaults
     this.categories = [];
     this.showPdf = false;
     this.showImg = false;
@@ -102,6 +103,11 @@ export class CertificateFormComponent implements OnInit {
     }
   }
 
+  private getPath(): string {
+    const YEAR = this.certificateForm.get('completed')?.value.getFullYear();
+    return `${this.PATH}/${this.userService.getUserName()}/${YEAR}`;
+  }
+
   private saveCertificate(filesUrl: string[]): void {
     const pdfUrl = filesUrl.find(value => value.includes('pdf'));
     const imgUrl = filesUrl.find(value => value.includes('png'));
@@ -109,12 +115,13 @@ export class CertificateFormComponent implements OnInit {
     this.certificate.pdfUrl = pdfUrl ? pdfUrl : this.certificate.pdfUrl;
     this.certificate.imgUrl = imgUrl ? imgUrl : this.certificate.imgUrl;
     this.certificateService.save(this.certificate).subscribe((data) => {
-      this.dialogRef.close();
+      this.dialogRef.close(1);
     });
   }
 
   private uploadFiles(files: File[]): void {
-    const uploadPromises: Promise<UploadResult>[] = CommonFunctions.uploadToFirebase(files, this.PATH);
+    const PATH = this.getPath();
+    const uploadPromises: Promise<UploadResult>[] = CommonFunctions.uploadToFirebase(files, PATH);
     Promise.all(uploadPromises)
       .then((snapshots: UploadResult[]) => {
         const downloadURLPromises: Promise<string>[] = CommonFunctions.getUrlFromFirebase(snapshots);

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TechnologyDTO } from '../../models/website/technology.model';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
@@ -17,15 +16,8 @@ export class TechnologyService extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  requestOptions = {
-    headers: new HttpHeaders({
-      'Authorization': 'Basic dXNlcjowODQxZWQwOC1mYmJlLTRhNDctYjliYy03N2NhODIxZTIyYjE='
-    })
-  }
-
-
   getAll(): Observable<TechnologyDTO[]> {
-    return this.httpClient.get<TechnologyDTO[]>(`${this.SERVICE}`, this.requestOptions);
+    return this.httpClient.get<TechnologyDTO[]>(`${this.SERVICE}`);
   }
 
   save(technology: TechnologyDTO): Observable<TechnologyDTO> {

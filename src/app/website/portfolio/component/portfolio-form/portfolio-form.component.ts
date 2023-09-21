@@ -13,6 +13,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonFunctions } from '@core/util/common';
 import { PortfolioService } from '@core/service/website/portfolio.service';
 import { MatSelectChange } from '@angular/material/select';
+import { UserService } from '@core/service/authentication/user.service';
 
 
 @Component({
@@ -34,13 +35,15 @@ export class PortfolioFormComponent implements OnInit {
   maxDate: Date;
   show: boolean;
   private REG = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
-  private PATH = 'images/portfolio';
+  private PATH: string;
   constructor(private route: ActivatedRoute,
               private router: Router,
               private portfolioService: PortfolioService,
               private categoryService: CategoryService,
+              private userService: UserService,
               private formBuilder: FormBuilder,
               private spinner: NgxSpinnerService) {
+      this.PATH = '';
       this.show = false;
       this.loading = true;
       this.title = '';
@@ -51,6 +54,7 @@ export class PortfolioFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadPathVariable()
     this.spinner.show();
     this.route.paramMap.pipe(
       switchMap(paramMap => {
@@ -93,6 +97,10 @@ export class PortfolioFormComponent implements OnInit {
     } else {
       SwalConfig.simpleModalWarning('Advertencia', 'Debes tener al menos una tecnología agregada asociada al proyecto');
     }
+  }
+
+  private loadPathVariable() {
+    this.PATH = `images/portfolio/${this.userService.getUserName()}`;
   }
 
   private savePortfolio(fileUrl: string): void {

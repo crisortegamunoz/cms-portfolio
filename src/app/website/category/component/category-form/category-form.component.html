@@ -24,13 +24,16 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <mat-form-field class="example-full-width" appearance="outline" subscriptSizing="dynamic">
+        <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+          <mat-form-field class="example-full-width " appearance="outline" subscriptSizing="dynamic">
             <mat-label>Sección</mat-label>
-            <input matInput formControlName="section">
-            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>create</mat-icon>
+            <mat-select formControlName="section" required>
+              <mat-option *ngFor="let section of sections" [value]="section.code">
+                {{ section.name }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="categoryForm.get('section')?.hasError('required')">
-              Sección es requerida
+              Debe seleccionar una sección
             </mat-error>
           </mat-form-field>
         </div>

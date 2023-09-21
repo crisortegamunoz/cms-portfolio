@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { CategoryDTO } from '../../models/website/category.model';
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { Page } from '@core/models/response/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class CategoryService extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  getAll(): Observable<CategoryDTO[]> {
-    return this.httpClient.get<CategoryDTO[]>(`${this.SERVICE}`);
+  getAll(): Observable<Page<CategoryDTO>> {
+    return this.httpClient.get<Page<CategoryDTO>>(`${this.SERVICE}`);
   }
 
   save(category: CategoryDTO): Observable<CategoryDTO> {

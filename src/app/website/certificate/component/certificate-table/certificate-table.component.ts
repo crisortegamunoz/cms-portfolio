@@ -68,6 +68,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
       data: {
         object: {} as CertificateDTO,
         action: 'add',
+        disableClose: true
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
@@ -83,6 +84,7 @@ export class CertificateTableComponent extends UnsubscribeOnDestroyAdapter imple
       data: {
         object: certificate,
         action: 'edit',
+        disableClose: true
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {

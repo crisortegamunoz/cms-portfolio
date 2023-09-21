@@ -16,8 +16,6 @@ import { CategoryDTO } from '../../../../core/models/website/category.model';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { SwalConfig } from '@core/swal/config';
-//import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
-//import { DeleteDialogComponent } from './dialogs/delete/delete.component';
 
 
 @Component({
@@ -51,12 +49,12 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
 
 
   ngOnInit() {
-    this.getTechnologies();
+    this.getCategories();
   }
 
-  getTechnologies() {
-    this.categoryService.getAll().subscribe((categories) => {
-      this.categories = categories;
+  getCategories() {
+    this.categoryService.getAll().subscribe((page) => {
+      this.categories = page.content;
       this.dataSource = new MatTableDataSource<CategoryDTO>(this.categories);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -64,7 +62,7 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
   }
 
   refresh() {
-    this.getTechnologies();
+    this.getCategories();
   }
 
   addNew() {
@@ -72,12 +70,13 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
       data: {
         object: {} as CategoryDTO,
         action: 'add',
+        disableClose: true
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         SwalConfig.successMessage('La categoría fue creada exitosamente!');
-        this.getTechnologies();
+        this.getCategories();
       }
     });
   }
@@ -87,12 +86,13 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
       data: {
         object: category,
         action: 'edit',
+        disableClose: true
       }
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         SwalConfig.successMessage(`La categoría N° ${category.id} fue actualizada`);
-        this.getTechnologies();
+        this.getCategories();
       }
     });
   }
@@ -102,15 +102,10 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
       if (result.isConfirmed) {
         this.categoryService.delete(category.id).subscribe(() => {
             SwalConfig.simpleModalSuccess('Operación realizada con exito!', 'La categoría fue eliminada');
-            this.getTechnologies();
+            this.getCategories();
         });
-
       }
     });
-  }
-
-  private refreshTable() {
-    this.paginator._changePageSize(this.paginator.pageSize);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -158,4 +153,5 @@ export class CategoryTableComponent extends UnsubscribeOnDestroyAdapter implemen
         this.contextMenu.openMenu();
       }
   }
+
 }

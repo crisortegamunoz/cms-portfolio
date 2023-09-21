@@ -27,6 +27,7 @@ export class AuthService {
     .pipe(
       tap(response => {
         this.tokenService.saveToken(response.jwt);
+        this.tokenService.saveApiKey(response.apiKey);
         this.userService.setUserName(user.username);
       })
     )
